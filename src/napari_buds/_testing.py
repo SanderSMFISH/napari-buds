@@ -129,7 +129,7 @@ class Main(QWidget):
             self.class_labels=list(labels_to_define.asdict().values())
             print(self.class_labels)
 
-        @magicclass(layout='vertical', widget_type = "collapsible", name = "Random forest classification")
+        @magicclass(layout='vertical', widget_type = "collapsible", name = "Random_forest_classification")
         class Train_Classifier():
             def __init__(self):
                 self.viewer = napari_viewer

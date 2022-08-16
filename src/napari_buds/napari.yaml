@@ -14,15 +14,12 @@ contributions:
     - id: napari-buds.make_sample_data
       python_name: napari_buds._sample_data:make_sample_data
       title: Load sample data from napari BudAnnotation
-    - id: napari-buds.make_qwidget
-      python_name: napari_buds._widget:ExampleQWidget
-      title: Make example QWidget
-    - id: napari-buds.make_magic_widget
-      python_name: napari_buds._widget:example_magic_widget
-      title: Make example magic widget
-    - id: napari-buds.make_func_widget
-      python_name: napari_buds._widget:example_function_widget
-      title: Make example function widget
+    - id: napari-buds.translate
+      python_name: napari_buds._translate:translate
+      title: translate image layer
+    - id: napari-buds.testing
+      python_name: napari_buds._widget:Main
+      title: Napari bud annotation
   readers:
     - command: napari-buds.get_reader
       accepts_directories: false
@@ -39,10 +36,7 @@ contributions:
       display_name: napari BudAnnotation
       key: unique_id.1
   widgets:
-    - command: napari-buds.make_qwidget
-      display_name: Example QWidget
-    - command: napari-buds.make_magic_widget
-      display_name: Example Magic Widget
-    - command: napari-buds.make_func_widget
-      autogenerate: true
-      display_name: Example Function Widget
+    - command: napari-buds.translate
+      display_name: Translate image layers (controls ASWD, T = register)
+    - command: napari-buds.testing
+      display_name: bud annotation                                         

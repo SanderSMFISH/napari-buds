@@ -24,16 +24,13 @@ from qtpy.QtWidgets import (QWidget,
                             QVBoxLayout,
                             QTabWidget,
                             QPushButton)
-from superqt import QCollapsible
 from magicgui import widgets
 from napari.qt.threading import thread_worker
 from functools import partial
 from napari.layers import Image, Labels
-from _segmentation_functions import dilation,erosion,watershed_seg, clean_up, label_id, draw_mother_bud_relations, count_class_labels
-from qtpy.QtWidgets import QWidget, QMainWindow, QApplication, QDockWidget,QScrollArea
+from _segmentation_functions import dilation,erosion,watershed_seg, clean_up, label_id, draw_mother_bud_relations
+from qtpy.QtWidgets import QWidget, QMainWindow, QApplication, QDockWidget
 from qtpy.QtCore import QObject, QEvent, Qt
-from skimage.feature import peak_local_max
-from skimage.filters import threshold_otsu
 
 from typing import TYPE_CHECKING
 
@@ -44,8 +41,14 @@ from qtpy.QtWidgets import QHBoxLayout, QPushButton, QWidget, QCheckBox
 if TYPE_CHECKING:
     import napari
 
+def count_class_labels(labels):
+    labels=np.unique(labels)
+    labels=list(np.delete(labels, np.where(labels == 0)))
+    labels=[f'class_{label}' for label in labels]
 
-class Main(QWidget):
+    return labels
+
+class ExampleQWidget(QWidget):
     # your QWidget.__init__ can optionally request the napari viewer instance
     # in one of two ways:
     # 1. use a parameter called `napari_viewer`, as done here
@@ -58,11 +61,13 @@ class Main(QWidget):
         self.class_labels =  ['cell','bud','background']
         self.savefolder=Path.home()
         self.clf = None
-        self.hidden_layers=['result','seeds','Labels','relations mother buds','cell mask','distance']
+        self.hidden_layers=['result','seeds','Labels','relations mother buds','cell mask']
 
         #extract layer names for feature extraction
         labels_FE=[self.viewer.layers[i].name for i in range(len(self.viewer.layers))][::-1]
         labels_FE=[x for x in labels_FE if x not in self.hidden_layers]
+        print(labels_FE)
+
         layers_to_select = Container(widgets=[create_widget(name=label, widget_type='CheckBox') for label in labels_FE])
         layers_to_select.insert(0,Label(name='Layers_to_extract_Features_from:'))
         self.labels_FE=labels_FE
@@ -70,8 +75,10 @@ class Main(QWidget):
         #update layer choices after changes to label layer
         @self.viewer.layers.events.connect
         def update_layer_extraction_container():
+            print(labels_FE)
             labels_FE=[self.viewer.layers[i].name for i in range(len(self.viewer.layers))][::-1]
             labels_FE=[x for x in labels_FE if x not in self.hidden_layers]
+            print(labels_FE)
             old_layers=layers_to_select.asdict()
             old_layers.pop('Layers_to_extract_Features_from:')
             for layer in old_layers.keys():
@@ -127,9 +134,8 @@ class Main(QWidget):
                         labels_to_define.append(create_widget(pot_widget_name,name=pot_widget_name))
 
             self.class_labels=list(labels_to_define.asdict().values())
-            print(self.class_labels)
 
-        @magicclass(layout='vertical', widget_type = "collapsible", name = "Random forest classification")
+        @magicclass(layout='vertical')
         class Train_Classifier():
             def __init__(self):
                 self.viewer = napari_viewer
@@ -205,7 +211,6 @@ class Main(QWidget):
         #threshold seeds
         @magic_factory(auto_call=False,call_button='Threshold')
         def threshold(image: Image, threshold: int = 100):
-            self.image=image
             image =(image.data*(100/image.data.max()))
             seeds=image>threshold
             seeds=clean_up(seeds)
@@ -223,45 +228,6 @@ class Main(QWidget):
         @self.viewer.layers.events.connect
         def reset_threshold_choices():
             self.threshold.reset_choices()
-
-
-        #peak local mask seeds
-        @magic_factory(threshold = {'widget_type': 'Slider','min':-100,'max':100},call_button='Find_local_maxima')
-        def find_local_maxima(image:Image,threshold: int =10,min_distance: int = 20, threshold_abs: int = 15,threshold_rel: int = 0):
-
-            if threshold_abs==0:
-                threshold_abs=None
-            if threshold_rel==0:
-                threshold_rel=None
-
-            thresholded_image=image.data>(threshold_otsu(image.data)+threshold*10)
-            distance_image=distance(thresholded_image)
-            local_max_coords = feature.peak_local_max(
-            distance_image,
-            min_distance=min_distance,
-            threshold_rel=threshold_rel,
-            threshold_abs=threshold_abs,
-            )
-            local_max_mask = np.zeros(distance_image.shape, dtype=bool)
-            print(local_max_mask.shape)
-            local_max_mask[tuple(local_max_coords.T)] = True
-            local_max_mask=dilation(local_max_mask,3)
-            markers, _ = nlabel(local_max_mask)
-            print(markers)
-            try:
-                self.viewer.layers.remove('seeds')
-                self.viewer.layers.remove('distance')
-            except:
-                pass
-            self.viewer.add_image(distance_image,name='distance',opacity=0.3)
-            self.viewer.add_labels(markers,name='seeds')
-
-        maxima=find_local_maxima()
-        self.maxima=maxima
-
-        @self.viewer.layers.events.connect
-        def reset_find_local_maxima():
-            self.maxima.reset_choices()
 
         #Segmentation
         @magic_factory(auto_call=False,call_button='Segment', labels=False)
@@ -302,37 +268,42 @@ class Main(QWidget):
         cont_Train_Classifier=Container(widgets=[Train_Classifier],labels=False)
 
         #seeds
-        Seeds_1=Container(widgets=[self.threshold],labels=False)
-        Seeds_2=Container(widgets=[self.maxima],labels=False)
+        Seeds=Container(widgets=[Label(name='Define Seeds'),self.threshold],labels=True)
 
         #segment
         Segment=segment()
         draw_mother_bud=draw_mother_bud()
-        segment_cont=Container(widgets=[Segment,draw_mother_bud],labels=False,name='Watershed_segmentation')
+        segment_cont=Container(widgets=[Segment,draw_mother_bud],labels=False,name="Watershed_segmentation")
 
+        #spacer widget
+        spacer=Container(widgets=[Label(name='spacer')],labels=False)
         self.layout().addWidget(layers_to_select.native)
+        #spacer
+        self.layout().addWidget(spacer.native)
         self.layout().addWidget(labels_to_define_tag.native)
         self.layout().addWidget(labels_to_define.native)
         self.layout().addWidget(Refresh_labels.native) 
+        #spacer
+        self.layout().addWidget(spacer.native)
         self.layout().addWidget(cont_Train_Classifier.native)
-        seed_tag_main=Container(widgets=[Label(name='Define_watershed_seeds')],labels=True)
-        self.layout().addWidget(seed_tag_main.native)
-        self._collapse1 = QCollapsible('Thresholding', self)
-        self._collapse1.addWidget(Seeds_1.native)
-        self.layout().addWidget(self._collapse1)
-        self._collapse2 = QCollapsible('Distance transform:', self)
-        self._collapse2.addWidget(Seeds_2.native)
-        self.layout().addWidget(self._collapse2)
-        segment_tag=Container(widgets=[Label(name='Watershed_segmentation')],labels=True)
-        self.layout().addWidget(segment_tag.native)
+        #spacer 
+        #self.layout().addWidget(spacer.native)
+        #self.layout().addWidget(cont_Save_and_Load_Models.native)
+        #spacer 
+        self.layout().addWidget(spacer.native)
+        self.layout().addWidget(Seeds.native)
+        #spacer
+        self.layout().addWidget(spacer.native)
         self.layout().addWidget(segment_cont.native)
-        self.layout().addStretch()
 
     def eventFilter(self, obj: QObject, event: QEvent):
         if event.type() == QEvent.ParentChange:
             parent = self.parent()
+            print('parent Changed!, now:', parent)
             if isinstance(parent, QDockWidget):
+                parent.dockLocationChanged.connect(
+                    lambda area: print("changed location to", area)
+                )
                 self.threshold.reset_choices()
-                self.maxima.reset_choices()
         return super().eventFilter(obj, event)
 
