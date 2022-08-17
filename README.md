@@ -73,6 +73,10 @@ Bud label values should correspond to the label value of the cell mask of mother
 press **Draw Mother-Bud relations**. If Mother-Bud relations are correct, you can save both label layers. 
 For an example of standardized saving and extracting the mother-bud relations from the saved layers see the 'napari-bud_example.ipynb' file in the notebooks folder.
 
+
+See video for clarification:
+https://github.com/SanderSMFISH/napari-buds/blob/main/videos/Napari_bud-annotation%20example%20video.mov
+
 ## License
 
 Distributed under the terms of the [BSD-3] license,
