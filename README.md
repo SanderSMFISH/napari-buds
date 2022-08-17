@@ -65,8 +65,8 @@ https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_trainable_s
     
 5. Next, we want to perfom watershed segmentation using the result layer. However, for watershed segmentation seeds (also called markers) are required
 (for an explanation of watershed segmenation see: https://en.wikipedia.org/wiki/Watershed_(image_processing)). 
-To define the seeds we can either simply threshold on one of the supplied image layers or we can use distance tranform (https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_watershed.html#sphx-glr-auto   examples-segmentation-plot-watershed-py) 
-if thresholding is not suitable. The resulting seeds layer can be adjusted manually by editing in napari. A good seeds layers  correspond to each cell having a single seed (buds are not single cells). To perform watershed segmentation press the **Segment** button.
+To define the seeds we can either simply threshold on one of the supplied image layers or we can use distance tranform (https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_watershed.html#sphx-glr-auto   examples-segmentation-plot-watershed-py) if thresholding is not suitable.
+The resulting seeds layer can be adjusted manually by editing in napari. A good seeds layers correspond to each cell having a single seed (buds are not single cells). To perform watershed segmentation press the **Segment** button.
     
 6. Carefully inspect the resulting cell mask and bud layer. Correct the mistakes in both layers. 
 Bud label values should correspond to the label value of the cell mask of mother cell. To verify mother bud relations were drawn correctly
