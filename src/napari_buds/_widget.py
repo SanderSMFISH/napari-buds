@@ -29,7 +29,7 @@ from magicgui import widgets
 from napari.qt.threading import thread_worker
 from functools import partial
 from napari.layers import Image, Labels
-from _segmentation_functions import dilation,erosion,watershed_seg, clean_up, label_id, draw_mother_bud_relations, count_class_labels
+from segmentation_functions import dilation,erosion,watershed_seg, clean_up, label_id, draw_mother_bud_relations, count_class_labels
 from qtpy.QtWidgets import QWidget, QMainWindow, QApplication, QDockWidget,QScrollArea
 from qtpy.QtCore import QObject, QEvent, Qt
 from skimage.feature import peak_local_max
