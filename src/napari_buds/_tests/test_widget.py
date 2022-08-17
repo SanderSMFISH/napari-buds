@@ -1,6 +1,6 @@
 import numpy as np
 
-from ._widget import Main
+from .._widget import Main
 
 def test_Main(make_napari_viewer, capsys):
     viewer = make_napari_viewer()
