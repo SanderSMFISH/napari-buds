@@ -44,23 +44,24 @@ Napari-Buds is a random forest based mother-bud annotation plugin for Napari dev
 
 Please follow the workflow described underneath to perform mother-bud annotation:
 
-    1. Open images in napari and create empty label layer. For multichannel images each channel should be provided seperately to napari. 
+1. Open images in napari and create empty label layer. For multichannel images each channel should be provided seperately to napari. 
     
-    2. If multichannel images are unaligned the  translate widget under Plugins>napari-buds>Translate can be used. 
-    Select which layer should be translated to align to the layers in widget menu. Then use the ASWD keys to translate (move) the selected layer. 
-    To register changes and update coordinates of the translated image in napari press t. 
+2. If multichannel images are unaligned the  translate widget under Plugins>napari-buds>Translate can be used. 
+Select which layer should be translated to align to the layers in widget menu. Then use the ASWD keys to translate (move) the selected layer. 
+To register changes and update coordinates of the translated image in napari press t. 
     
-    ## Random forest classification
-    3. To open the mother-bud annotation plugin go to Plugins>napari-buds>bud annotation.
+## Random forest classification
+3. To open the mother-bud annotation plugin go to Plugins>napari-buds>bud annotation.
     
-    4. To train a random forest classifier, in the created label layer draw examples of cells, buds and background (see tutorial video below). 
-    In the Define Label segment of the widget you define which label value (class #label_value) corresponds to cells, buds and background. 
-    In the segment **Layers to extract Features from** we can select which layers will be used in training the random forest classifier. Next press **Train                 classifier**.
-    After training is completed a result layer is added to layer list. Inspect the results carefully to asses classifier performance. The trained classifier can be         saved using the **save classifier** button.
-    Previously trained classifier can be loaded by pressing **Load classifier**. Loaded classifer can applied to new images by pressing **Classify**, resulting             again in a results layer. It is possible to change the random forest parameters with **the Set random forest parameters** button and
-    changing the values in the pop up menu. Press **Run** to register changed settings. For an example of the parameters used see: 
-    https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html and 
-    https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_trainable_segmentation.html. 
+4. To train a random forest classifier, in the created label layer draw examples of cells, buds and background (see tutorial video below). 
+In the Define Label segment of the widget you define which label value (class #label_value) corresponds to cells, buds and background. 
+In the segment **Layers to extract Features from** we can select which layers will be used in training the random forest classifier. 
+Next press **Train classifier**. After training is completed a result layer is added to layer list. 
+Inspect the results carefully to asses classifier performance. The trained classifier can be saved using the **save classifier** button.
+Previously trained classifier can be loaded by pressing **Load classifier**. Loaded classifer can applied to new images by pressing **Classify**, resulting             again in a results layer. It is possible to change the random forest parameters with **the Set random forest parameters** button and
+changing the values in the pop up menu. Press **Run** to register changed settings. For an example of the parameters used see: 
+https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html and 
+https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_trainable_segmentation.html. 
     
     5. Next, we want to perfom watershed segmentation using the result layer. However, for watershed segmentation seeds (also called markers) are required (for an           explanation of watershed segmenation see: https://en.wikipedia.org/wiki/Watershed_(image_processing)). To define the seeds we can either simply threshold on one       of the supplied image layers or we can use distance tranform (https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_watershed.html#sphx-glr-auto   examples-segmentation-plot-watershed-py) if thresholding is not suitable. The resulting seeds layer can be adjusted manually by editing in napari. A good seeds layers      correspond to each cell having a single seed (buds are not single cells). To perform watershed segmentation press the **Segment** button.
     
