@@ -59,7 +59,12 @@ class Main(QWidget):
         self.savefolder=Path.home()
         self.clf = None
         self.hidden_layers=['result','seeds','Labels','relations mother buds','cell mask','distance']
-
+        
+        try:
+            self.viewer.layers['Labels']
+        except KeyError:
+            print(f"create a label layer first!")
+            
         #extract layer names for feature extraction
         labels_FE=[self.viewer.layers[i].name for i in range(len(self.viewer.layers))][::-1]
         labels_FE=[x for x in labels_FE if x not in self.hidden_layers]
