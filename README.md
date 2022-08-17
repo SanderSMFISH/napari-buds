@@ -50,7 +50,7 @@ Please follow the workflow described underneath to perform mother-bud annotation
 Select which layer should be translated to align to the layers in widget menu. Then use the ASWD keys to translate (move) the selected layer. 
 To register changes and update coordinates of the translated image in napari press t. 
     
-## Random forest classification
+### Random forest classification
 3. To open the mother-bud annotation plugin go to Plugins>napari-buds>bud annotation.
     
 4. To train a random forest classifier, in the created label layer draw examples of cells, buds and background (see tutorial video below). 
