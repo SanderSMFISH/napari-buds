@@ -63,9 +63,15 @@ changing the values in the pop up menu. Press **Run** to register changed settin
 https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html and 
 https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_trainable_segmentation.html. 
     
-    5. Next, we want to perfom watershed segmentation using the result layer. However, for watershed segmentation seeds (also called markers) are required (for an           explanation of watershed segmenation see: https://en.wikipedia.org/wiki/Watershed_(image_processing)). To define the seeds we can either simply threshold on one       of the supplied image layers or we can use distance tranform (https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_watershed.html#sphx-glr-auto   examples-segmentation-plot-watershed-py) if thresholding is not suitable. The resulting seeds layer can be adjusted manually by editing in napari. A good seeds layers      correspond to each cell having a single seed (buds are not single cells). To perform watershed segmentation press the **Segment** button.
+5. Next, we want to perfom watershed segmentation using the result layer. However, for watershed segmentation seeds (also called markers) are required
+(for an explanation of watershed segmenation see: https://en.wikipedia.org/wiki/Watershed_(image_processing)). 
+To define the seeds we can either simply threshold on one of the supplied image layers or we can use distance tranform (https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_watershed.html#sphx-glr-auto   examples-segmentation-plot-watershed-py) 
+if thresholding is not suitable. The resulting seeds layer can be adjusted manually by editing in napari. A good seeds layers  correspond to each cell having a single seed (buds are not single cells). To perform watershed segmentation press the **Segment** button.
     
-    6. Carefully inspect the resulting cell mask and bud layer. Correct the mistakes in both layers. Bud label values should correspond to the label value of the cell     mask of mother cell. To verify mother bud relations were drawn correctly press **Draw Mother-Bud relations**. If Mother-Bud relations are correct, you can save         both label layers. For an example of standardized saving and extracting the mother-bud relations from the saved layers see the 'napari-bud_example.ipynb' file in    the notebooks folder.
+6. Carefully inspect the resulting cell mask and bud layer. Correct the mistakes in both layers. 
+Bud label values should correspond to the label value of the cell mask of mother cell. To verify mother bud relations were drawn correctly
+press **Draw Mother-Bud relations**. If Mother-Bud relations are correct, you can save both label layers. 
+For an example of standardized saving and extracting the mother-bud relations from the saved layers see the 'napari-bud_example.ipynb' file in the notebooks folder.
 
 ## License
 
