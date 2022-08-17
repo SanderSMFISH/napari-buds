@@ -76,7 +76,7 @@ For an example of standardized saving and extracting the mother-bud relations fr
 
 See video for clarification:
 
-![Watch the video](https://github.com/SanderSMFISH/napari-buds/blob/main/videos/ezgif.com-gif-maker.gif)
+![Watch the video](https://github.com/SanderSMFISH/napari-buds/blob/main/videos/Napari_bud_gif.gif)
 
 ## License
 
