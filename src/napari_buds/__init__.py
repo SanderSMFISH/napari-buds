@@ -9,7 +9,7 @@ from napari import viewer
 
 
 __all__ = (
-    "_segmentation_functions"
+    "_segmentation_functions",
     "napari_get_reader",
     "write_single_image",
     "write_multiple",
