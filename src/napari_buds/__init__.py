@@ -1,7 +1,7 @@
 __version__ = "0.0.2"
 
 from ._reader import napari_get_reader
-import _segmentation_functions
+import segmentation_functions
 from ._sample_data import make_sample_data
 from ._widget import Main
 from ._writer import write_multiple, write_single_image
@@ -9,7 +9,7 @@ from napari import viewer
 
 
 __all__ = (
-    "_segmentation_functions",
+    "segmentation_functions",
     "napari_get_reader",
     "write_single_image",
     "write_multiple",
