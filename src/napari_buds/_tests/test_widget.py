@@ -10,9 +10,6 @@ def test_Main(make_napari_viewer, capsys):
     # create our widget, passing in the viewer
     my_widget = Main(viewer)
 
-    # call our widget method
-    my_widget._on_click()
-
     # read captured output and check that it's as we expected
     captured = capsys.readouterr()
     assert captured.out == f"you have selected {layer}\n"
