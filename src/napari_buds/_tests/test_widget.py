@@ -20,7 +20,7 @@ def test_Main(make_napari_viewer, capsys):
     my_widget.threshold(image=img)
     my_widget.maxima(image=img)
     my_widget.segment()
-    my.widget.draw_mother_bud()
+    my_widget.draw_mother_bud()
 
     #refresh GUI functions
     my_widget.update_layer_extraction_container()
