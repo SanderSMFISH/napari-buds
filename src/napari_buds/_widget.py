@@ -159,7 +159,7 @@ class Main(QWidget):
             #train classifier by extracting from checked feature layers and fitting + predicting random forest parameters
             @set_design(text="Train classifier")
             def train_classify(self):
-                fs_features=layers_to_select.asdict()
+                fs_features=self.labels_FE
                 print(fs_features)
                 fs=[]
                 for fs_feature,check in fs_features.items():
@@ -183,7 +183,7 @@ class Main(QWidget):
             #classify using loaded classifier
             @set_design(text="Classify")
             def classify(self):
-                fs_features=layers_to_select.asdict()
+                fs_features=self.labels_FE
                 print(fs_features)
                 fs=[]
                 for fs_feature,check in fs_features.items():
