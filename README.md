@@ -82,8 +82,10 @@ See video for clarification:
 ![Watch the video](https://github.com/SanderSMFISH/napari-buds/blob/main/videos/Napari_bud_gif.gif)
 
 ## Similar Napari plugins 
-1-napari-accelerated-pixel-and-object-classification (APOC) by Robert Haasse
-2-napari-feature-classifier
+
+1-napari-accelerated-pixel-and-object-classification (APOC) by Robert Haasse.
+
+2-napari-feature-classifier.
 
 ## License
 
