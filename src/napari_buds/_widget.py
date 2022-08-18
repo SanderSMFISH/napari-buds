@@ -106,7 +106,7 @@ class Main(QWidget):
         self.class_labels=slabels
 
         #add class labels define widget to GUI
-        labels_to_define = Container(widgets=[create_widget(slabel,name=widget_name) for widget_name,slabel in zip(widget_names,slabels)],scrollable = True)
+        labels_to_define = Container(widgets=[create_widget(slabel,name=widget_name) for widget_name,slabel in zip(widget_names,slabels)])
         labels_to_define_tag=Container(widgets=[Label(name='Define_Label_names:')],labels=True)
         Refresh_labels=PushButton(name="Refresh")
         
@@ -322,7 +322,12 @@ class Main(QWidget):
         draw_mother_bud=draw_mother_bud()
         segment_cont=Container(widgets=[Segment,draw_mother_bud],labels=False,name='Watershed_segmentation')
 
-        self.layout().addWidget(layers_to_select.native)
+        #make selection scrollable to prevent overcrowding widget
+        self.scroll = QScrollArea()
+        self.scroll.setWidget(layers_to_select.native)
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.layout().addWidget(self.scroll)
         self.layout().addWidget(labels_to_define_tag.native)
         self.layout().addWidget(labels_to_define.native)
         self.layout().addWidget(Refresh_labels.native) 
