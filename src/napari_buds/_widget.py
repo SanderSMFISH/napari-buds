@@ -70,7 +70,7 @@ class Main(QWidget):
         labels_FE=[self.viewer.layers[i].name for i in range(len(self.viewer.layers))][::-1]
         labels_FE=[x for x in labels_FE if x not in self.hidden_layers]
         layers_to_select = Container(widgets=[create_widget(name=label, widget_type='CheckBox',value=1) for label in labels_FE])
-        layers_to_select.insert(0,Label(name='Layers_to_extract_Features_from:'))
+        #layers_to_select.insert(0,Label(name='Layers_to_extract_Features_from:'))
         self.labels_FE=labels_FE
 
         #update layer choices after changes to label layer
@@ -79,7 +79,7 @@ class Main(QWidget):
             labels_FE=[self.viewer.layers[i].name for i in range(len(self.viewer.layers))][::-1]
             labels_FE=[x for x in labels_FE if x not in self.hidden_layers]
             old_layers=layers_to_select.asdict()
-            old_layers.pop('Layers_to_extract_Features_from:')
+            #old_layers.pop('Layers_to_extract_Features_from:')
             for layer in old_layers.keys():
                 if layer not in labels_FE:
                     layers_to_select.remove(layer)
@@ -325,6 +325,8 @@ class Main(QWidget):
         segment_cont=Container(widgets=[Segment,draw_mother_bud],labels=False,name='Watershed_segmentation')
 
         #make selection scrollable to prevent overcrowding widget
+        label_tag_main=Container(widgets=[Label(name='Layers_to_extract_Features_from:')],labels=True)
+        self.layout().addWidget(label_tag_main.native)
         self.scroll = QScrollArea()
         self.scroll.setWidget(layers_to_select.native)
         self.scroll.setWidgetResizable(True)
