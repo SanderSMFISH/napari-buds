@@ -57,6 +57,7 @@ To register changes and update coordinates of the translated image in napari pre
     
 4. To train a random forest classifier, in the created label layer draw examples of cells, buds and background (see tutorial gif below). 
 In the Define Label segment of the widget you define which label value (class #label_value) corresponds to cells, buds and background. 
+Currently, cells and backgrounds and buds **have to be defined in the Define Label segment**  if you want to be able to segment the classification aswell.
 In the segment **Layers to extract Features from** we can select which layers will be used in training the random forest classifier. 
 Next press **Train classifier**. After training is completed a result layer is added to layer list. 
 Inspect the results carefully to asses classifier performance. The trained classifier can be saved using the **save classifier** button.
