@@ -24,5 +24,4 @@ def test_Main(make_napari_viewer, capsys):
     my.widget.draw_mother_bud()
 
     #refresh GUI functions
-    my_widget.eventFilter()
     my_widget.update_layer_extraction_container()
