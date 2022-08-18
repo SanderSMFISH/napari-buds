@@ -11,7 +11,7 @@ def test_Main(make_napari_viewer, capsys):
     for i in range(0,100,34):
         labels[i,:]=label
         label+=1
-    labels= viewer.add_labels(labels, name='labels')
+    labels= viewer.add_labels(labels, name='Labels')
 
     # create our widget, passing in the viewer
     my_widget = Main(viewer)
