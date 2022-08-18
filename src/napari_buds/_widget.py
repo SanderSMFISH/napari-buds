@@ -307,7 +307,6 @@ class Main(QWidget):
             self.viewer.add_labels(labeled_buds, name='buds')
             self.viewer.add_image(vector_image,name='relations mother buds',opacity=0.3)
 
-
         #organising the final gui
         #Classifier widget 
         Train_Classifier=Train_Classifier()
@@ -322,6 +321,7 @@ class Main(QWidget):
         Segment=segment()
         self.segment=Segment
         draw_mother_bud=draw_mother_bud()
+        self.draw_mother_bud=draw_mother_bud
         segment_cont=Container(widgets=[Segment,draw_mother_bud],labels=False,name='Watershed_segmentation')
 
         #make selection scrollable to prevent overcrowding widget
