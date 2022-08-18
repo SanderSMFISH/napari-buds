@@ -15,9 +15,10 @@ def test_Main(make_napari_viewer, capsys):
 
     # create our widget, passing in the viewer
     my_widget = Main(viewer)
-    my_widget.Train_Classifier.train_classify()
-    my_widget.Train_Classifier.classify()
-    my_widget.threshold(img, 45)
+    my_widget.train.train_classify()
+    my_widget.train.classify()
+    my_widget.threshold()
+    my_widget.maxima()
     my_widget.segment()
     my.widget.draw_mother_bud()
 

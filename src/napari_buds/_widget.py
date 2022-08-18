@@ -311,6 +311,7 @@ class Main(QWidget):
         #organising the final gui
         #Classifier widget 
         Train_Classifier=Train_Classifier()
+        self.train=Train_Classifier
         cont_Train_Classifier=Container(widgets=[Train_Classifier],labels=False)
 
         #seeds
@@ -319,6 +320,7 @@ class Main(QWidget):
 
         #segment
         Segment=segment()
+        self.segment=Segment
         draw_mother_bud=draw_mother_bud()
         segment_cont=Container(widgets=[Segment,draw_mother_bud],labels=False,name='Watershed_segmentation')
 
