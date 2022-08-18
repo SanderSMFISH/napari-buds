@@ -178,7 +178,7 @@ class Main(QWidget):
                     self.viewer.remove('result')
                 except:
                     pass
-                self.viewer.add_labels(result,opacity=0.5)
+                self.viewer.add_labels(result,name='result',opacity=0.5)
 
             #classify using loaded classifier
             @set_design(text="Classify")
@@ -200,7 +200,7 @@ class Main(QWidget):
                     self.viewer.remove('result')
                 except:
                     pass
-                self.viewer.add_labels(result,opacity=0.5) 
+                self.viewer.add_labels(result,name='result',opacity=0.5) 
             
             #save current classifier
             @set_options(file={'mode': 'w'}, call_button='save')

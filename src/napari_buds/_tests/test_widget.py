@@ -4,8 +4,23 @@ from .._widget import Main
 
 def test_Main(make_napari_viewer, capsys):
     viewer = make_napari_viewer()
-    layer = viewer.add_image(np.random.random((100, 100)))
-    layer = viewer.add_labels(np.zeros((100, 100),dtype=int))
+    img = viewer.add_image(np.random.random((100, 100)))
+    labels=np.zeros((100, 100),dtype=int)
+
+    label=1
+    for i in range(0,100,34):
+        labels[i,:]=label
+        label+=1
+    labels= viewer.add_labels(labels, name='labels')
 
     # create our widget, passing in the viewer
     my_widget = Main(viewer)
+    my_widget.Train_Classifier.train_classify()
+    my_widget.Train_Classifier.classify()
+    my_widget.threshold(img, 45)
+    my_widget.segment()
+    my.widget.draw_mother_bud()
+
+    #refresh GUI functions
+    my_widget.eventFilter()
+    my_widget.update_layer_extraction_container()
