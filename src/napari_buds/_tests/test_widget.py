@@ -15,7 +15,7 @@ def test_Main(make_napari_viewer, capsys):
 
     # create our widget, passing in the viewer
     my_widget = Main(viewer)
-    my_widget.labels_FE={Image: True }
+    my_widget.labels_FE={Image: True}
     my_widget.train.train_classify()
     my_widget.train.classify()
     my_widget.threshold()
