@@ -69,7 +69,7 @@ class Main(QWidget):
         #extract layer names for feature extraction
         labels_FE=[self.viewer.layers[i].name for i in range(len(self.viewer.layers))][::-1]
         labels_FE=[x for x in labels_FE if x not in self.hidden_layers]
-        layers_to_select = Container(widgets=[create_widget(name=label, widget_type='CheckBox') for label in labels_FE])
+        layers_to_select = Container(widgets=[create_widget(name=label, widget_type='CheckBox',value=1) for label in labels_FE])
         layers_to_select.insert(0,Label(name='Layers_to_extract_Features_from:'))
         self.labels_FE=labels_FE
 
@@ -159,7 +159,7 @@ class Main(QWidget):
             #train classifier by extracting from checked feature layers and fitting + predicting random forest parameters
             @set_design(text="Train classifier")
             def train_classify(self):
-                fs_features=self.labels_FE
+                fs_features=layers_to_select.asdict()
                 print(fs_features)
                 fs=[]
                 for fs_feature,check in fs_features.items():
@@ -183,7 +183,7 @@ class Main(QWidget):
             #classify using loaded classifier
             @set_design(text="Classify")
             def classify(self):
-                fs_features=self.labels_FE
+                fs_features=layers_to_select.asdict()
                 print(fs_features)
                 fs=[]
                 for fs_feature,check in fs_features.items():
