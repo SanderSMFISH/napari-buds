@@ -146,12 +146,13 @@ def draw_mother_bud_relations(label, labeled_buds):
     vector_plot = np.zeros((label.shape[0], label.shape[1]), dtype=np.uint32)
     table_buds=pd.DataFrame(rt(labeled_buds,properties=['label','centroid'])).rename(columns={"label":"label","centroid-0": "bud_x","centroid-1":"bud_y"})
     table_cells=pd.DataFrame(rt(label,properties=['label','centroid'])).rename(columns={"label":"label","centroid-0":"cell_x","centroid-1":"cell_y"})
-    filt_table_cells=table_cells[table_cells['label'].isin(table_buds['label'])] 
-    merged=table_buds.merge(filt_table_cells)
+    if len(table_buds)!=0 or len(table_cells)!=0:
+        filt_table_cells=table_cells[table_cells['label'].isin(table_buds['label'])] 
+        merged=table_buds.merge(filt_table_cells)
 
-    merged=merged.set_index('label')
-    for key,value in merged.iterrows():
-        rr, cc, val = line_aa(int(value['bud_x']),int(value['bud_y']), int(value['cell_x']), int(value['cell_y']))
-        vector_plot[rr, cc] = val * 255#add the vectors
+        merged=merged.set_index('label')
+        for key,value in merged.iterrows():
+            rr, cc, val = line_aa(int(value['bud_x']),int(value['bud_y']), int(value['cell_x']), int(value['cell_y']))
+            vector_plot[rr, cc] = val * 255#add the vectors
 
     return label, labeled_buds, vector_plot
