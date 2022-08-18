@@ -44,7 +44,7 @@ from qtpy.QtWidgets import QHBoxLayout, QPushButton, QWidget, QCheckBox
 if TYPE_CHECKING:
     import napari
 
-
+#main napari widget for bud-annotation plugin
 class Main(QWidget):
     # your QWidget.__init__ can optionally request the napari viewer instance
     # in one of two ways:
@@ -60,6 +60,7 @@ class Main(QWidget):
         self.clf = None
         self.hidden_layers=['result','seeds','Labels','relations mother buds','cell mask','distance']
         
+        #check whether label layer is added to the viewer.
         try:
             self.viewer.layers['Labels']
         except KeyError:
@@ -104,11 +105,12 @@ class Main(QWidget):
             slabels = slabels[:i]
         self.class_labels=slabels
 
+        #add class labels define widget to GUI
         labels_to_define = Container(widgets=[create_widget(slabel,name=widget_name) for widget_name,slabel in zip(widget_names,slabels)])
         labels_to_define_tag=Container(widgets=[Label(name='Define_Label_names:')],labels=True)
         Refresh_labels=PushButton(name="Refresh")
         
-        #PushButton to refresh label layer
+        #PushButton to refresh class labels that are defined in the GUI
         Refresh_labels.is_connected = False
         @Refresh_labels.changed.connect
         def _on_connect(event):
@@ -134,6 +136,7 @@ class Main(QWidget):
             self.class_labels=list(labels_to_define.asdict().values())
             print(self.class_labels)
 
+        #magicclass automatic widget creation for Random forest classification, training and saving + loading of classifiers.
         @magicclass(layout='vertical', widget_type = "collapsible", name = "Random forest classification")
         class Train_Classifier():
             def __init__(self):
@@ -143,7 +146,7 @@ class Main(QWidget):
                 self.rf_params=RandomForestClassifier(n_estimators=100, n_jobs=-1,
                              max_depth=10, max_samples=0.05)
 
-
+            #random forest classification parameter widget
             @set_design(text="Set random forest parameters")
             def set_random_forest_params(self,intensity=True, edges=True, texture=True,
                                 sigma_min=1, sigma_max=20, n_estimators=100,n_jobs=-1,max_depth=10,max_samples=0.05):
@@ -153,6 +156,7 @@ class Main(QWidget):
                 self.rf_params=RandomForestClassifier(n_estimators=n_estimators, n_jobs=n_jobs,
                              max_depth=max_depth, max_samples=max_samples)
 
+            #train classifier by extracting from checked feature layers and fitting + predicting random forest parameters
             @set_design(text="Train classifier")
             def train_classify(self):
                 fs_features=layers_to_select.asdict()
@@ -176,6 +180,7 @@ class Main(QWidget):
                     pass
                 self.viewer.add_labels(result,opacity=0.5)
 
+            #classify using loaded classifier
             @set_design(text="Classify")
             def classify(self):
                 fs_features=layers_to_select.asdict()
@@ -196,18 +201,20 @@ class Main(QWidget):
                 except:
                     pass
                 self.viewer.add_labels(result,opacity=0.5) 
-        
+            
+            #save current classifier
             @set_options(file={'mode': 'w'}, call_button='save')
             def Save_classifier(self,file = self.savefolder):
                 self.savefolder=file
                 joblib.dump(self.clf, str(file)) 
-                        
+            
+            #load a previously saved classifier            
             @set_options(file={'mode': 'r'}, call_button='Load')
             def Load_classifier(self,file=self.savefolder):
                 self.savefolder=file
                 self.clf=joblib.load(str(file))
 
-        #threshold seeds
+        #define seeds for watershed segmentation by thresholding
         @magic_factory(auto_call=False,call_button='Threshold')
         def threshold(image: Image, threshold: int = 100):
             self.image=image
@@ -230,7 +237,7 @@ class Main(QWidget):
             self.threshold.reset_choices()
 
 
-        #peak local mask seeds
+        #define seeds by peak local maxima on distance transformed image
         @magic_factory(threshold = {'widget_type': 'Slider','min':-100,'max':100},call_button='Find_local_maxima')
         def find_local_maxima(image:Image,threshold: int =10,min_distance: int = 20, threshold_abs: int = 15,threshold_rel: int = 0):
 
@@ -268,7 +275,7 @@ class Main(QWidget):
         def reset_find_local_maxima():
             self.maxima.reset_choices()
 
-        #Segmentation
+        #Watershed segmentation of cell and bud layer
         @magic_factory(auto_call=False,call_button='Segment', labels=False)
         def segment():
             cell_id,bud_id,bg_id=label_id(labels_to_define.asdict())
@@ -333,6 +340,7 @@ class Main(QWidget):
         self.layout().addWidget(segment_cont.native)
         self.layout().addStretch()
 
+    #update threshold widget and maxima widget when widget is added to napari GUI
     def eventFilter(self, obj: QObject, event: QEvent):
         if event.type() == QEvent.ParentChange:
             parent = self.parent()

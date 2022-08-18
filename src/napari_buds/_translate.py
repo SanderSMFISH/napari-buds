@@ -4,6 +4,10 @@ import napari
 import numpy as np
 from scipy.ndimage import shift
 
+#translation widget for layer alignment
+#keybindings are used, w:up,a:left,s:down,d:right. 
+#to register and update napari coordinates press t.
+
 @magic_factory(auto_call=True)
 def translate(image: Image, viewer: napari.Viewer):
     name=image.name
