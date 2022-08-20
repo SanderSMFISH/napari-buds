@@ -18,8 +18,8 @@ def test_Main(make_napari_viewer, capsys):
     my_widget = Main(viewer)
     my_widget.train.train_classify()
     my_widget.train.classify()
-    my_widget.threshold(image=img)
     my_widget.maxima(image=img)
+    my_widget.threshold(image=img)
     my_widget.segment()
     my_widget.draw_mother_bud()
 
