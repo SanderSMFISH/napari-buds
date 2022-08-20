@@ -21,4 +21,4 @@ def test_Main(make_napari_viewer, capsys):
     my_widget.maxima(image=img, threshold=99)
     my_widget.threshold(image=img, threshold=99)
     my_widget.segment()
-    my_widget.draw_mother_bud(np.array([[1, 2], [3, 4]]),np.array([[1, 2], [3, 4]])
+    my_widget.draw_mother_bud(np.array([[1, 2], [3, 4]]),np.array([[1, 2], [3, 4]]))
