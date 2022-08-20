@@ -295,7 +295,7 @@ class Main(QWidget):
         #draw mother bud relations
         @magic_factory(auto_call=False,call_button='Draw Mother-Bud relations', labels=False)
         def draw_mother_bud():
-            label, labeled_buds, vector_image  = draw_mother_bud_relations(self.label, self.labeled_buds)
+            label, labeled_buds, vector_image  = draw_mother_bud_relations(self.viewer.layers['cell mask'].data , self.viewer.layers['buds'].data)
             try:
                 self.viewer.layers.remove('buds')
                 self.viewer.layers.remove('cell mask')
