@@ -21,11 +21,7 @@ def test_Main(make_napari_viewer, capsys):
     my_widget.maxima(image=img, threshold=99)
     my_widget.threshold(image=img, threshold=99)
     my_widget.segment()
-    viewer.layers.remove('cell mask')
-    viewer.layers.remove('buds')
-    viewer.add_labels( np.array([[1, 2], [3, 4]]),name='cell mask',dtype=np.int16)
-    viewer.add_labels( np.array([[1, 2], [3, 4]]),name='buds',dtype=np.int16)
-    my_widget.draw_mother_bud()
+    my_widget.draw_mother_bud(np.array([[1, 2], [3, 4]]),np.array([[1, 2], [3, 4]])
 
     #refresh GUI functions
     my_widget.update_layer_extraction_container()
