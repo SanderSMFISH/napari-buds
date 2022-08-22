@@ -46,7 +46,7 @@ Napari-Buds is a random forest based mother-bud annotation plugin for Napari dev
 
 Please follow the workflow described underneath to perform mother-bud annotation:
 
-1. Open images in napari and create empty label layer. For multichannel images each channel should be provided seperately to napari. An example (jupyter) notebook for loading test data in napari is provided in the notebooks folder (named:Open Test Images Napari.ipynb ). 
+1. Open images in napari and create empty label layer. For multichannel images each channel should be provided seperately to napari. An example (jupyter) notebook (Open Test Images Napari.ipynb) for loading test data in napari is provided in the notebooks folder (named:Open Test Images Napari.ipynb ). Example dataset can be downloaded from https://zenodo.org/record/7004556#.YwM1_HZBztU. 
     
 2. If multichannel images are unaligned the  translate widget under Plugins>napari-buds>Translate can be used. 
 Select which layer should be translated to align to the layers in widget menu. Then use the aswd keys to translate (move) the selected layer. 
@@ -76,6 +76,9 @@ A good seeds layers correspond to each cell having a single seed (buds are not s
 Bud label values should correspond to the label value of the cell mask of mother cell. To verify mother bud relations were drawn correctly
 press **Draw Mother-Bud relations**. If Mother-Bud relations are correct, you can save both label layers. 
 For an example of standardized saving and extracting the mother-bud relations from the saved layers see the 'napari-bud_example.ipynb' file in the notebooks folder.
+
+7. An example notebook for dataextraction of the created cell and bud masks can be found in the example notebooks folder (Extract_Mother_Buds_relations_from_Masks_and_intergrate_FQ_spot_data.ipynb).
+This notebooks relates RNA spots (smFISH data found on zenodo) to the mother or bud compartment. 
 
 
 See video for clarification:
