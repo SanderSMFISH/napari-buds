@@ -42,7 +42,7 @@ Contributions are very welcome. Tests can be run with [tox], please ensure
 the coverage at least stays the same before you submit a pull request.
 
 ## Documentation
-Napari-Buds is a random forest based mother-bud annotation plugin for Napari devevoped by the TutucciLab (https://www.tutuccilab.com/) of the systems biology group at the Vrije Universiteit van Amsterdam. Mother-bud annotation requires single or multichannel 2D images of budding yeast and a fluorescent marker that localizes to the bud. In the example dataset provided smFISH DNA-probes were used as localized bud marker.The GUI layout for random forest based classification was inspired by ImageJ 'plugin Weka Segmentation' [1]. 
+Napari-Buds is a random forest based mother-bud annotation plugin for Napari developed by the TutucciLab (https://www.tutuccilab.com/) of the systems biology group at the Vrije Universiteit van Amsterdam. Mother-bud annotation requires single or multichannel 2D images of budding yeast and a fluorescent marker that localizes to the bud. In the example dataset provided smFISH DNA-probes were used as localized bud marker.The GUI layout for random forest based classification was inspired by ImageJ 'plugin Weka Segmentation' [1]. 
 
 Please follow the workflow described underneath to perform mother-bud annotation:
 
@@ -60,11 +60,11 @@ To register changes and update coordinates of the translated image in napari pre
     
 4. To train a random forest classifier, in the created label layer draw examples of cells, buds and background (see tutorial gif below). 
 In the Define Label segment of the widget you define which label value (class #label_value) corresponds to cells, buds and background. 
-Currently, cells and backgrounds and buds **have to be defined in the Define Label segment**  if you want to be able to segment the classification aswell.
+Currently, cells and backgrounds and buds **have to be defined in the Define Label segment**  if you want to be able to segment the classification as well.
 In the segment **Layers to extract Features from** we can select which layers will be used in training the random forest classifier. 
 Next press **Train classifier**. After training is completed a result layer is added to layer list. 
 Inspect the results carefully to asses classifier performance. The trained classifier can be saved using the **save classifier** button.
-Previously trained classifier can be loaded by pressing **Load classifier**. Loaded classifer can applied to new images by pressing **Classify**, resulting again in a results layer.
+Previously trained classifier can be loaded by pressing **Load classifier**. Loaded classifier can applied to new images by pressing **Classify**, resulting again in a results layer.
 It is possible to change the random forest parameters with **the Set random forest parameters** button and changing the values in the pop up menu.
 Press **Run** to register changed settings. For an example of the parameters used see: 
 https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html and 
@@ -90,7 +90,7 @@ See video for clarification:
 
 ## Similar Napari plugins 
 
-1-napari-accelerated-pixel-and-object-classification (APOC) by Robert Haasse.
+1-napari-accelerated-pixel-and-object-classification (APOC) by Robert Haase.
 
 2-napari-feature-classifier.
 
