@@ -9,7 +9,7 @@ def test_Main(make_napari_viewer, capsys):
 
     labels=np.zeros(img.data.shape,dtype=int)
     label=1
-    for i in range(0,100,34):
+    for i in range(0,50,34):
         labels[:,i]=label
         label+=1
     Labels= viewer.add_labels(labels,name='Labels')
@@ -18,8 +18,8 @@ def test_Main(make_napari_viewer, capsys):
     my_widget = Main(viewer)
     my_widget.train.train_classify()
     my_widget.train.classify()
-    my_widget.maxima(image=img, threshold=99)
-    my_widget.threshold(image=img, threshold=99)
+    my_widget.maxima(image=img, threshold=10)
+    my_widget.threshold(image=img, threshold=10)
     my_widget.segment()
     
     viewer.layers.remove('cell mask')
