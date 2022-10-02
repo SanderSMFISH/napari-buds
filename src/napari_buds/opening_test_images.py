@@ -49,7 +49,7 @@ for i in range(zproject.shape[0]):
     viewer.add_image(zproject[i,...],name=channels[i],colormap=colors[i],opacity=0.60,blending='additive')   #contrast_limits=cls[i])
 viewer.add_labels(mask,name='Labels')
 
-viewer.add_labels(io.imread(path_seeds),name='seeds')
-viewer.add_labels(io.imread(path_results),name='result')
+#viewer.add_labels(io.imread(path_seeds),name='seeds')
+#viewer.add_labels(io.imread(path_results),name='result')
 napari.run()
 #python ./src/napari_buds/opening_test_images.py 

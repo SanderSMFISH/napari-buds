@@ -52,7 +52,8 @@ class Main(QWidget):
     # 2. use a type annotation of 'napari.viewer.Viewer' for any parameter
     def __init__(self, napari_viewer):
         super().__init__()
-        self.setLayout(QVBoxLayout())
+        self.outer_scroll = QScrollArea() 
+        self.vbox = QVBoxLayout()
         self.viewer = napari_viewer
         self.installEventFilter(self)
         self.class_labels =  ['cell','bud','background']
@@ -164,7 +165,6 @@ class Main(QWidget):
                 fs=[]
                 for fs_feature,check in fs_features.items():
                     if check==True:
-                        print('beep')
                         array=self.viewer.layers[str(fs_feature)].data.astype(np.uint16)
                         fs.append(self.features_func(array))
                 features = np.concatenate(fs, axis=-1)
@@ -188,7 +188,6 @@ class Main(QWidget):
                 fs=[]
                 for fs_feature,check in fs_features.items():
                     if check==True:
-                        print('beep')
                         array=self.viewer.layers[str(fs_feature)].data.astype(np.uint16)
                         fs.append(self.features_func(array))
                 features = np.concatenate(fs, axis=-1)
@@ -326,28 +325,36 @@ class Main(QWidget):
 
         #make selection scrollable to prevent overcrowding widget
         label_tag_main=Container(widgets=[Label(name='Layers_to_extract_Features_from:')],labels=True)
-        self.layout().addWidget(label_tag_main.native)
+        self.vbox.addWidget(label_tag_main.native)
         self.scroll = QScrollArea()
         self.scroll.setWidget(layers_to_select.native)
         self.scroll.setWidgetResizable(True)
-        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-        self.layout().addWidget(self.scroll)
-        self.layout().addWidget(labels_to_define_tag.native)
-        self.layout().addWidget(labels_to_define.native)
-        self.layout().addWidget(Refresh_labels.native) 
-        self.layout().addWidget(cont_Train_Classifier.native)
+        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.vbox.addWidget(self.scroll)
+        self.vbox.addWidget(labels_to_define_tag.native)
+        self.vbox.addWidget(labels_to_define.native)
+        self.vbox.addWidget(Refresh_labels.native) 
+        self.vbox.addWidget(cont_Train_Classifier.native)
         seed_tag_main=Container(widgets=[Label(name='Define_watershed_seeds')],labels=True)
-        self.layout().addWidget(seed_tag_main.native)
+        self.vbox.addWidget(seed_tag_main.native)
         self._collapse1 = QCollapsible('Thresholding', self)
         self._collapse1.addWidget(Seeds_1.native)
-        self.layout().addWidget(self._collapse1)
+        self.vbox.addWidget(self._collapse1)
         self._collapse2 = QCollapsible('Distance transform:', self)
         self._collapse2.addWidget(Seeds_2.native)
-        self.layout().addWidget(self._collapse2)
+        self.vbox.addWidget(self._collapse2)
         segment_tag=Container(widgets=[Label(name='Watershed_segmentation')],labels=True)
-        self.layout().addWidget(segment_tag.native)
-        self.layout().addWidget(segment_cont.native)
-        self.layout().addStretch()
+        self.vbox.addWidget(segment_tag.native)
+        self.vbox.addWidget(segment_cont.native)
+        self.vbox.addStretch()
+
+        #make entire widget scrollable
+        self.setLayout(self.vbox)
+        self.outer_scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.outer_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.outer_scroll.setWidgetResizable(True)
+        self.outer_scroll.setWidget(self)
 
     #update threshold widget and maxima widget when widget is added to napari GUI
     def eventFilter(self, obj: QObject, event: QEvent):

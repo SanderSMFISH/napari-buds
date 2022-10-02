@@ -42,18 +42,21 @@ Contributions are very welcome. Tests can be run with [tox], please ensure
 the coverage at least stays the same before you submit a pull request.
 
 ## Documentation
-Napari-Buds is a random forest based mother-bud annotation plugin for Napari devevoped by the TutucciLab (https://www.tutuccilab.com/) of the systems biology group at the Vrije Universiteit van Amsterdam. Mother-bud annotation requires single or multichannel 2D images of budding yeast and some kind of marker that localizes to the bud. In the example dataset provided smFISH DNA-probes were used as localized bud marker.The GUI layout for random forest based classification was inspired by ImageJ 'plugin Weka Segmentation' [1]. 
+Napari-Buds is a random forest based mother-bud annotation plugin for Napari devevoped by the TutucciLab (https://www.tutuccilab.com/) of the systems biology group at the Vrije Universiteit van Amsterdam. Mother-bud annotation requires single or multichannel 2D images of budding yeast and a fluorescent marker that localizes to the bud. In the example dataset provided smFISH DNA-probes were used as localized bud marker.The GUI layout for random forest based classification was inspired by ImageJ 'plugin Weka Segmentation' [1]. 
 
 Please follow the workflow described underneath to perform mother-bud annotation:
 
-1. Open images in napari and create empty label layer. For multichannel images each channel should be provided seperately to napari. An example (jupyter) notebook (Open Test Images Napari.ipynb) for loading test data in napari is provided in the notebooks folder (named:Open Test Images Napari.ipynb ). Example dataset can be downloaded from https://zenodo.org/record/7004556#.YwM1_HZBztU. 
+1. Open images in napari and create empty label layer. **Before starting the plugin it is required that a empty label layer is created**.
+For multichannel images each channel should be provided seperately to napari.
+An example (jupyter) notebook (Open Test Images Napari.ipynb) for loading test data in napari is provided in the notebooks folder. 
+Example dataset can be downloaded from https://zenodo.org/record/7004556#.YwM1_HZBztU. 
     
 2. If multichannel images are unaligned the  translate widget under Plugins>napari-buds>Translate can be used. 
 Select which layer should be translated to align to the layers in widget menu. Then use the aswd keys to translate (move) the selected layer. 
 To register changes and update coordinates of the translated image in napari press t. 
     
 ### Random forest classification
-3. To open the mother-bud annotation plugin go to Plugins>napari-buds>bud annotation.
+3. To open the mother-bud annotation plugin go to Plugins>napari-buds>bud annotation. **Before starting the plugin it is required that a empty label layer is created**.
     
 4. To train a random forest classifier, in the created label layer draw examples of cells, buds and background (see tutorial gif below). 
 In the Define Label segment of the widget you define which label value (class #label_value) corresponds to cells, buds and background. 
@@ -69,16 +72,16 @@ https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_trainable_s
     
 5. Next, we want to perfom watershed segmentation using the result layer. However, for watershed segmentation seeds (also called markers) are required
 (for an explanation of watershed segmenation see: https://en.wikipedia.org/wiki/Watershed_(image_processing)). 
-To define the seeds we can either simply threshold on one of the supplied image layers or we can use distance tranform (https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_watershed.html#sphx-glr-auto   examples-segmentation-plot-watershed-py) if thresholding is not suitable.The resulting seeds layer can be adjusted manually by editing in napari.
+To define the seeds we can either simply threshold on one of the supplied image layers or we can use distance tranform (https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_watershed.html#sphx-glr-auto   examples-segmentation-plot-watershed-py).The resulting seeds layer can be adjusted manually by editing in napari.
 A good seeds layers correspond to each cell having a single seed (buds are not single cells). To perform watershed segmentation press the **Segment** button.
     
 6. Carefully inspect the resulting cell mask and bud layer. Correct the mistakes in both layers. 
 Bud label values should correspond to the label value of the cell mask of mother cell. To verify mother bud relations were drawn correctly
-press **Draw Mother-Bud relations**. If Mother-Bud relations are correct, you can save both label layers. 
-For an example of standardized saving and extracting the mother-bud relations from the saved layers see the 'napari-bud_example.ipynb' file in the notebooks folder.
+press **Draw Mother-Bud relations**. If Mother-Bud relations are correct, you can save both label layers. Mother and buds simply share the same label number.
+Thus, either the mother or bud layer can be manually corrected for mistakes. Corrections can be checked by clicking **Draw Mother-Bud relations** again. 
+mother and buds layer can be saved manually in napari. When using Jupyter notebook mother and bud layers can be saved as shown in Open Test Images Napari.ipynb.
 
-7. An example notebook for dataextraction of the created cell and bud masks can be found in the example notebooks folder (Extract_Mother_Buds_relations_from_Masks_and_intergrate_FQ_spot_data.ipynb).
-This notebooks relates RNA spots (smFISH data found on zenodo) to the mother or bud compartment. 
+7. An example notebook for dataextraction of the created cell and bud masks can be found in the example notebooks folder (Extract_Mother_Buds_relations_from_Masks_and_intergrate_FQ_spot_data.ipynb).This notebooks relates RNA spots (smFISH data found on zenodo) to the mother or bud compartment. 
 
 
 See video for clarification:
@@ -99,6 +102,11 @@ Distributed under the terms of the [BSD-3] license,
 ## Issues
 
 If you encounter any problems, please [file an issue] along with a detailed description.
+
+### Known Issues
+
+If window geometry of the window is unable to be set, this might lead to issues in the display of the widget. For example, part of the widget might fall of the screen.
+In these cases, it might help to adjust in your display setting the display scaling to a lower setting. 
 
 [napari]: https://github.com/napari/napari
 [Cookiecutter]: https://github.com/audreyr/cookiecutter
