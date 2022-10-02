@@ -9,7 +9,7 @@ def test_Main(make_napari_viewer, capsys):
     labels=np.zeros(img.data.shape,dtype=int)
     label=1
     for i in range(1,4):
-        labels[:,i]=label
+        labels[:,i-1]=label
         label+=1
     Labels= viewer.add_labels(labels,name='Labels')
 
