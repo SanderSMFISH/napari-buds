@@ -56,7 +56,7 @@ class Main(QWidget):
         self.vbox = QVBoxLayout()
         self.viewer = napari_viewer
         self.installEventFilter(self)
-        self.class_labels =  ['cell','bud','background']
+        self.class_labels =  ['cells','buds','background']
         self.savefolder=Path.home()
         self.clf = None
         self.hidden_layers=['result','seeds','Labels','relations mother buds','cell mask','distance']
