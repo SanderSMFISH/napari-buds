@@ -135,7 +135,11 @@ class Main(QWidget):
                         labels_to_define.append(create_widget(pot_widget_name,name=pot_widget_name))
 
             self.class_labels=list(labels_to_define.asdict().values())
-            print(self.class_labels)
+
+            self.label = self.viewer.layers['cell mask'].data
+            self.labeled_buds = self.viewer.layers['buds'].data
+            
+
 
         #magicclass automatic widget creation for Random forest classification, training and saving + loading of classifiers.
         @magicclass(layout='vertical', widget_type = "collapsible", name = "Random forest classification")
@@ -281,15 +285,16 @@ class Main(QWidget):
             result=self.viewer.layers['result'].data
             seeds=self.viewer.layers['seeds'].data
             label, labeled_buds=watershed_seg(result,seeds,cell_id,bud_id,bg_id)
+            self.label=label
+            self.labeled_buds=labeled_buds
             try:
                 self.viewer.layers.remove('cell mask')
                 self.viewer.layers.remove('buds')
             except:
                 pass
-            self.viewer.add_labels(label,name='cell mask')
-            self.viewer.add_labels(labeled_buds,name='buds')
-            self.label=label
-            self.labeled_buds=labeled_buds
+            self.viewer.add_labels(self.label,name='cell mask')
+            self.viewer.add_labels(self.labeled_buds,name='buds')
+
 
         #draw mother bud relations
         @magic_factory(auto_call=False,call_button='Draw Mother-Bud relations', labels=False)

@@ -106,7 +106,7 @@ def contested_buds(buds,original_buds,labels,markers):
 def segment_buds(label,result,markers,cell_id,bud_id,bg_id):
     buds=result==bud_id
     buds=clean_up(buds)
-    labels_buds,_=nlabel(buds)
+    labels_buds,_=nlabel(buds) 
     buds=np.where((label>0) & (buds>0),label,0)
     #budlabels that are contested are linked to closes nuclei
     decontested_buds=contested_buds(buds,labels_buds,label,markers)
@@ -132,9 +132,9 @@ def watershed_seg(result, seeds,cell_id,bud_id,bg_id):
 #reads the define label classes and 
 def label_id(dictionary_of_class_labels):
     for k, v in dictionary_of_class_labels.items():
-        if v=='bud':
+        if v=='buds':
             bud_id=int(str(k).split('_')[1])
-        if v=='cell':
+        if v=='cells':
             cell_id=int(str(k).split('_')[1])
         if v=='background':
             bg_id=int(str(k).split('_')[1])
@@ -148,11 +148,11 @@ def draw_mother_bud_relations(label, labeled_buds):
     table_cells=pd.DataFrame(rt(label,properties=['label','centroid'])).rename(columns={"label":"label","centroid-0":"cell_x","centroid-1":"cell_y"})
     if len(table_buds)!=0 or len(table_cells)!=0:
         filt_table_cells=table_cells[table_cells['label'].isin(table_buds['label'])] 
-        merged=table_buds.merge(filt_table_cells)
+        merged=table_buds.merge(filt_table_cells,left_on='label', right_on='label')
 
         merged=merged.set_index('label')
         for key,value in merged.iterrows():
             rr, cc, val = line_aa(int(value['bud_x']),int(value['bud_y']), int(value['cell_x']), int(value['cell_y']))
-            vector_plot[rr, cc] = val * 255#add the vectors
+            vector_plot[rr, cc] = val * 255 #add the vectors
 
     return label, labeled_buds, vector_plot

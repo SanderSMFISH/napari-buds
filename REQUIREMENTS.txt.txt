@@ -1,0 +1,12 @@
+    numpy
+    magicgui
+    qtpy
+    pandas
+    napari
+    magic-class
+    scipy
+    scikit-learn
+    scikit-image
+    matplotlib
+    joblib
+    imageio_ffmpeg
