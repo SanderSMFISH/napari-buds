@@ -104,14 +104,16 @@ def contested_buds(buds,original_buds,labels,markers):
 
 #segment buds (included bud decontestion and continuos space requirement functions)
 def segment_buds(label,result,markers,cell_id,bud_id,bg_id):
-    buds=result==bud_id
-    buds=clean_up(buds)
-    labels_buds,_=nlabel(buds) 
-    buds=np.where((label>0) & (buds>0),label,0)
-    #budlabels that are contested are linked to closes nuclei
-    decontested_buds=contested_buds(buds,labels_buds,label,markers)
-    #budlabels can exist in only one continuos location
-    labeled_buds_cont=continuous_space(buds,labels_buds)
+    labeled_buds_cont=np.zeros((result.shape[0],result.shape[1]),dtype=int)
+    if bud_id!=None:
+        buds=result==bud_id
+        buds=clean_up(buds)
+        labels_buds,_=nlabel(buds) 
+        buds=np.where((label>0) & (buds>0),label,0)
+        #budlabels that are contested are linked to closes nuclei
+        decontested_buds=contested_buds(buds,labels_buds,label,markers)
+        #budlabels can exist in only one continuos location
+        labeled_buds_cont=continuous_space(buds,labels_buds)
 
     return labeled_buds_cont
 
@@ -131,6 +133,9 @@ def watershed_seg(result, seeds,cell_id,bud_id,bg_id):
 
 #reads the define label classes and 
 def label_id(dictionary_of_class_labels):
+
+    cell_id,bud_id,bg_id= None, None, None
+
     for k, v in dictionary_of_class_labels.items():
         if v=='buds':
             bud_id=int(str(k).split('_')[1])

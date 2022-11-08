@@ -136,8 +136,11 @@ class Main(QWidget):
 
             self.class_labels=list(labels_to_define.asdict().values())
 
-            self.label = self.viewer.layers['cell mask'].data
-            self.labeled_buds = self.viewer.layers['buds'].data
+            try:
+                self.label = self.viewer.layers['cell mask'].data
+                self.labeled_buds = self.viewer.layers['buds'].data
+            except:
+                pass
             
 
 
@@ -195,7 +198,6 @@ class Main(QWidget):
                         array=self.viewer.layers[str(fs_feature)].data.astype(np.uint16)
                         fs.append(self.features_func(array))
                 features = np.concatenate(fs, axis=-1)
-                print(features.shape)
                 clf = self.clf
                 training_labels = self.viewer.layers['Labels'].data.astype(np.uint32)
                 result = future.predict_segmenter(features, clf)
