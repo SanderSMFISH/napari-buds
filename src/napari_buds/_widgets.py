@@ -170,7 +170,7 @@ class Train_Classifier(QWidget):
         #train classifier by extracting from checked feature layers and fitting + predicting random forest parameters
         self.train_button=PushButton(label='Train classifier')
 
-        def train_classifier(self):
+        def train_classifier():
             fs_features=self.parent.Extract_features_widget.layers_to_select.asdict()
             fs=[]
             for fs_feature,check in fs_features.items():
@@ -192,7 +192,7 @@ class Train_Classifier(QWidget):
         #classify using loaded classifier
         self.classify_button=PushButton(label="Classify")
 
-        def classify(self):
+        def classify():
             fs_features=self.parent.Extract_features_widget.layers_to_select.asdict()
             fs=[]
             for fs_feature,check in fs_features.items():
@@ -403,7 +403,7 @@ class Segment(QWidget):
 
         self.segment_button=PushButton(label="Segment")
 
-        def segment_cells(self):
+        def segment_cells():
             cell_id,bud_id,bg_id=label_id(self.labels_to_define.asdict())
             result=self.viewer.layers['result'].data
             seeds=self.viewer.layers['seeds'].data
@@ -436,7 +436,7 @@ class Draw(QWidget):
 
         self.draw_button=PushButton(label="Draw")
 
-        def draw_mother_bud(self):
+        def draw_mother_bud():
             label, labeled_buds, vector_image  = draw_mother_bud_relations(self.viewer.layers['cell mask'].data , self.viewer.layers['buds'].data)
             try:
                 self.viewer.layers.remove('buds')
