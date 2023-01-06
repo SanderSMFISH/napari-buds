@@ -1,6 +1,6 @@
 import numpy as np
 
-from .._widget import Main
+from .._widget_overview import UIWidget
 
 def test_Main(make_napari_viewer, capsys):
     viewer = make_napari_viewer()
@@ -14,12 +14,12 @@ def test_Main(make_napari_viewer, capsys):
     Labels= viewer.add_labels(labels,name='Labels')
 
     # create our widget, passing in the viewer
-    my_widget = Main(viewer)
-    my_widget.train.train_classify()
-    my_widget.train.classify()
-    my_widget.maxima(image=img, threshold=10)
-    my_widget.threshold(image=img, threshold=10)
-    my_widget.segment()
+    my_widget = UIWidget(viewer)
+    my_widget.Train_Classifier_widget.train_classifier()
+    my_widget.Train_Classifier_widget.classify()
+    my_widget.Maxima.create_seeds()
+    my_widget.Threshold.create_seeds()
+    my_widget.Segment.segment_cells()
     
     viewer.layers.remove('cell mask')
     viewer.layers.remove('buds')
@@ -27,4 +27,4 @@ def test_Main(make_napari_viewer, capsys):
     viewer.add_labels(np.array([[1, 2], [3, 4]]),name='cell mask')
     viewer.add_labels(np.array([[1, 2], [3, 4]]),name='buds')
 
-    my_widget.draw_mother_bud()
+    my_widget.Draw.draw_mother_bud()

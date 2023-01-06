@@ -20,6 +20,9 @@ contributions:
     - id: napari-buds.testing
       python_name: napari_buds._widget:Main
       title: Napari bud annotation
+    - id: napari-buds.redecorated
+      python_name: napari_buds._widget_overview:UIWidget
+      title: Napari bud annotation redecorated
   readers:
     - command: napari-buds.get_reader
       accepts_directories: false
@@ -38,5 +41,5 @@ contributions:
   widgets:
     - command: napari-buds.translate
       display_name: Translate image layers (controls ASWD, T = register)
-    - command: napari-buds.testing
-      display_name: bud annotation                                         
+    - command: napari-buds.redecorated
+      display_name: bud annotation                                       

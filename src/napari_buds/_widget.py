@@ -191,7 +191,6 @@ class Main(QWidget):
             @set_design(text="Classify")
             def classify(self):
                 fs_features=layers_to_select.asdict()
-                print(fs_features)
                 fs=[]
                 for fs_feature,check in fs_features.items():
                     if check==True:
@@ -220,7 +219,7 @@ class Main(QWidget):
                 self.clf=joblib.load(str(file))
 
         #define seeds for watershed segmentation by thresholding
-        @magic_factory(auto_call=False,call_button='Threshold')
+        @magicgui(auto_call=False,call_button='Threshold')
         def threshold(image: Image, threshold: int = 100):
             self.image=image
             image =(image.data*(100/image.data.max()))
