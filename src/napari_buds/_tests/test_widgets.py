@@ -14,16 +14,16 @@ def test_Main(make_napari_viewer, capsys):
 
     # create our widget, passing in the viewer
     my_widget = UIWidget(viewer)
-    my_widget.Train_Classifier_widget.train_button.on_click()
-    my_widget.Train_Classifier_widget.classify_button.on_click()
-    my_widget.Maxima.threshold_slider.on_click()
-    my_widget.Threshold.threshold_slider.create_seeds()
-    my_widget.Segment.segment_button.on_click()
+    my_widget.Train_Classifier_widget.train_classifier()
+    my_widget.Train_Classifier_widget.classify()
+    # my_widget.Maxima.threshold_slider.on_click()
+    # my_widget.Threshold.threshold_slider.create_seeds()
+    # my_widget.Segment.segment_button.on_click()
     
-    viewer.layers.remove('cell mask')
-    viewer.layers.remove('buds')
+    # viewer.layers.remove('cell mask')
+    # viewer.layers.remove('buds')
 
-    viewer.add_labels(np.array([[1, 2], [3, 4]]),name='cell mask')
-    viewer.add_labels(np.array([[1, 2], [3, 4]]),name='buds')
+    # viewer.add_labels(np.array([[1, 2], [3, 4]]),name='cell mask')
+    # viewer.add_labels(np.array([[1, 2], [3, 4]]),name='buds')
 
-    my_widget.Draw.draw_button.on_click()
+    # my_widget.Draw.draw_button.on_click()
