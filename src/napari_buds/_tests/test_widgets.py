@@ -1,5 +1,4 @@
 import numpy as np
-
 from .._widget_overview import UIWidget
 
 def test_Main(make_napari_viewer, capsys):
