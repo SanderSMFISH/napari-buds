@@ -209,9 +209,6 @@ class Train_Classifier(QWidget):
                 pass
             self.viewer.add_labels(result,name='result',opacity=0.5) 
 
-        #for testing
-        self.test_classify=classify()
-
         #load classifier
         self.load_edit=FileEdit(label="Load classifier", mode='r')
         self.load_button=PushButton(label="Load")
