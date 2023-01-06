@@ -26,4 +26,6 @@ def test_Main(make_napari_viewer, capsys):
     viewer.add_labels(np.array([[1, 2], [3, 4]]),name='cell mask')
     viewer.add_labels(np.array([[1, 2], [3, 4]]),name='buds')
 
-    my_widget.Draw.draw_mother_bud()
+    my_widget.Draw.draw_button.on_click()
+
+test_Main()
