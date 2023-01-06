@@ -170,7 +170,7 @@ class Train_Classifier(QWidget):
         #train classifier by extracting from checked feature layers and fitting + predicting random forest parameters
         self.train_button=PushButton(label='Train classifier')
 
-        def train_classifier(self):
+        def train_classifier():
             fs_features=self.parent.Extract_features_widget.layers_to_select.asdict()
             fs=[]
             for fs_feature,check in fs_features.items():
@@ -192,7 +192,7 @@ class Train_Classifier(QWidget):
         #classify using loaded classifier
         self.classify_button=PushButton(label="Classify")
 
-        def classify(self):
+        def classify():
             fs_features=self.parent.Extract_features_widget.layers_to_select.asdict()
             fs=[]
             for fs_feature,check in fs_features.items():
