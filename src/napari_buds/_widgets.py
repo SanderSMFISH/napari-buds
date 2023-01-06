@@ -170,7 +170,7 @@ class Train_Classifier(QWidget):
         #train classifier by extracting from checked feature layers and fitting + predicting random forest parameters
         self.train_button=PushButton(label='Train classifier')
 
-        def train_classifier():
+        def train_classifier(self):
             fs_features=self.parent.Extract_features_widget.layers_to_select.asdict()
             fs=[]
             for fs_feature,check in fs_features.items():
@@ -192,7 +192,7 @@ class Train_Classifier(QWidget):
         #classify using loaded classifier
         self.classify_button=PushButton(label="Classify")
 
-        def classify():
+        def classify(self):
             fs_features=self.parent.Extract_features_widget.layers_to_select.asdict()
             fs=[]
             for fs_feature,check in fs_features.items():
@@ -349,7 +349,7 @@ class Maxima(QWidget):
         self.rel_threshold_slider = Slider(value=0, min=0,max=100, label=f'relative_threshold',tracking=False)
 
         #calculate local peaks
-        def create_seeds(values: (int, ...)):
+        def create_seeds(self,values: (int, ...)):
             scaled_img = self.to_threshold_img*(100/self.to_threshold_img.max())
             threshold = self.local_peaks_slider.value
             thresholded_image=scaled_img>threshold
@@ -403,7 +403,7 @@ class Segment(QWidget):
 
         self.segment_button=PushButton(label="Segment")
 
-        def segment_cells():
+        def segment_cells(self):
             cell_id,bud_id,bg_id=label_id(self.labels_to_define.asdict())
             result=self.viewer.layers['result'].data
             seeds=self.viewer.layers['seeds'].data
@@ -436,7 +436,7 @@ class Draw(QWidget):
 
         self.draw_button=PushButton(label="Draw")
 
-        def draw_mother_bud():
+        def draw_mother_bud(self):
             label, labeled_buds, vector_image  = draw_mother_bud_relations(self.viewer.layers['cell mask'].data , self.viewer.layers['buds'].data)
             try:
                 self.viewer.layers.remove('buds')
