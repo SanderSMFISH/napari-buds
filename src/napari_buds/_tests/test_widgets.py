@@ -16,7 +16,7 @@ def test_Main(make_napari_viewer, capsys):
     my_widget = UIWidget(viewer)
     my_widget.Train_Classifier_widget.train_classifier()
     my_widget.Train_Classifier_widget.classify()
-    my_widget.Maxima.create_seeds()
+    #my_widget.Maxima.create_seeds()
     my_widget.Threshold.create_seeds()
     my_widget.Segment.segment_cells()
     

@@ -349,7 +349,7 @@ class Maxima(QWidget):
         self.rel_threshold_slider = Slider(value=0, min=0,max=100, label=f'relative_threshold',tracking=False)
 
         #calculate local peaks
-        def create_seeds(self,values: (int, ...)):
+        def create_seeds(values: (int, ...)):
             scaled_img = self.to_threshold_img*(100/self.to_threshold_img.max())
             threshold = self.local_peaks_slider.value
             thresholded_image=scaled_img>threshold
