@@ -188,10 +188,6 @@ class Train_Classifier(QWidget):
             except:
                 pass
             self.viewer.add_labels(result,name='result',opacity=0.5)
-        
-        #for testing
-        self.test_train_classifier=train_classifier()
-
 
         #classify using loaded classifier
         self.classify_button=PushButton(label="Classify")
@@ -305,9 +301,6 @@ class Threshold(QWidget):
                 pass
             self.viewer.add_labels(markers,name='seeds')
 
-        #for testing
-        self.test_create_seeds = create_seeds() 
-
         #add image selection widget
         self.layout().addWidget(Container(widgets=[self.input,self.threshold_slider],layout='vertical').native)
 
@@ -359,7 +352,7 @@ class Maxima(QWidget):
         self.rel_threshold_slider = Slider(value=0, min=0,max=100, label=f'relative_threshold',tracking=False)
 
         #calculate local peaks
-        def create_seeds():
+        def create_seeds(values: (int, ...)):
             scaled_img = self.to_threshold_img*(100/self.to_threshold_img.max())
             threshold = self.local_peaks_slider.value
             thresholded_image=scaled_img>threshold
@@ -381,9 +374,6 @@ class Maxima(QWidget):
                 pass
             self.viewer.add_image(distance_image,name='distance',opacity=0.80)
             self.viewer.add_labels(markers,name='seeds')
-
-        #for testing
-        self.test_create_seeds = create_seeds()
         
         #update local peaks when changes to slider are made        
         self.local_peaks_slider.changed.connect(create_seeds)
@@ -432,9 +422,6 @@ class Segment(QWidget):
             self.viewer.add_labels(self.label,name='cell mask')
             self.viewer.add_labels(self.labeled_buds,name='buds')
 
-        #for testing
-        self.test_segment = segment_cells()
-
         self.segment_button.changed.connect(segment_cells)
 
         self.layout().addWidget(self.segment_button.native)
@@ -464,9 +451,6 @@ class Draw(QWidget):
             self.viewer.add_labels(label, name='cell mask')
             self.viewer.add_labels(labeled_buds, name='buds')
             self.viewer.add_image(vector_image,name='relations mother buds',opacity=0.3)
-
-        #for testing
-        self.test_draw = draw_mother_bud()
 
         self.draw_button.changed.connect(draw_mother_bud)
         self.layout().addWidget(self.draw_button.native)
