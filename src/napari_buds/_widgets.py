@@ -5,7 +5,7 @@ from magicclass.types import OneOf
 from magicgui.widgets import LineEdit, SpinBox, Container, PushButton, create_widget, Label, ComboBox, Slider, Label,FileEdit
 from qtpy.QtWidgets import (QWidget,QVBoxLayout,QTabWidget,QPushButton,QHBoxLayout)
 from superqt import QCollapsible
-from magicgui import widgets
+from magicgui import widgets, magicgui
 from napari.layers import Image, Labels
 from qtpy.QtWidgets import QWidget, QMainWindow, QApplication, QDockWidget,QScrollArea, QPushButton
 from qtpy.QtCore import QObject, QEvent, Qt
@@ -170,7 +170,7 @@ class Train_Classifier(QWidget):
         #train classifier by extracting from checked feature layers and fitting + predicting random forest parameters
         self.train_button=PushButton(label='Train classifier')
 
-        def train_classifier():
+        def train_classifier(self):
             fs_features=self.parent.Extract_features_widget.layers_to_select.asdict()
             fs=[]
             for fs_feature,check in fs_features.items():
