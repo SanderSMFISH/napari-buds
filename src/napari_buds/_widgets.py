@@ -170,7 +170,7 @@ class Train_Classifier(QWidget):
         #train classifier by extracting from checked feature layers and fitting + predicting random forest parameters
         self.train_button=PushButton(label='Train classifier')
 
-        def train_classifier(self):
+        def train_classifier():
             fs_features=self.parent.Extract_features_widget.layers_to_select.asdict()
             fs=[]
             for fs_feature,check in fs_features.items():
@@ -188,7 +188,7 @@ class Train_Classifier(QWidget):
             except:
                 pass
             self.viewer.add_labels(result,name='result',opacity=0.5)
-
+    
         #classify using loaded classifier
         self.classify_button=PushButton(label="Classify")
 
@@ -283,7 +283,7 @@ class Threshold(QWidget):
         def update_current_choice():
             self.to_threshold_img=self.viewer.layers[self.input.current_choice].data
 
-        self.threshold_slider = Slider(value=0, min=0,max=100, label=f'Threshold ',tracking=False)
+        self.threshold_slider = Slider(value=0, min=0,max=100, label=f'Threshold',tracking=False)
 
         @self.threshold_slider.changed.connect
         def create_seeds():
@@ -346,10 +346,10 @@ class Maxima(QWidget):
 
         #add sliders for thresholding local peaks
         self.local_peaks_slider = Slider(value=0, min=0,max=100, label=f'Find local Maxima',tracking=False)
-        self.rel_threshold_slider = Slider(value=0, min=0,max=100, label=f'relative_threshold',tracking=False)
+        self.rel_threshold_slider = Slider(value=0, min=0,max=100, label=f'Relative threshold',tracking=False)
 
         #calculate local peaks
-        def create_seeds(values: (int, ...)):
+        def create_seeds():
             scaled_img = self.to_threshold_img*(100/self.to_threshold_img.max())
             threshold = self.local_peaks_slider.value
             thresholded_image=scaled_img>threshold
@@ -378,10 +378,8 @@ class Maxima(QWidget):
         self.input.changed.connect(create_seeds)
         self.update_distances.changed.connect(create_seeds)
         
-        #add widgets to Qwidget        
-        self.layout().addWidget(self.input.native)
-        self.layout().addWidget(self.local_peaks_slider.native) 
-        self.layout().addWidget(self.rel_threshold_slider.native)     
+        #add widgets to Qwidget     
+        self.layout().addWidget(Container(widgets=[self.input,self.local_peaks_slider,self.rel_threshold_slider],layout='vertical').native)       
         self.layout().addWidget(self.container.native)
 
 # ##################################################################################################################################################
