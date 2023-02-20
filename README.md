@@ -46,7 +46,7 @@ Napari-Buds is a random forest based mother-bud annotation plugin for Napari dev
 
 Please follow the workflow described underneath to perform mother-bud annotation:
 
-1. Open images in napari and create empty label layer. **Before starting the plugin it is required that a empty label layer is created**.
+1. Open images in napari and create empty label layer.
 For multichannel images each channel should be provided seperately to napari.
 An example (jupyter) notebook (Open Test Images Napari.ipynb) for loading test data in napari is provided in the notebooks folder. 
 Example dataset can be downloaded from https://zenodo.org/record/7004556#.YwM1_HZBztU. 
@@ -56,7 +56,7 @@ Select which layer should be translated to align to the layers in widget menu. T
 To register changes and update coordinates of the translated image in napari press t. 
     
 ### Random forest classification
-3. To open the mother-bud annotation plugin go to Plugins>napari-buds>bud annotation. **Before starting the plugin it is required that a empty label layer is created**.
+3. To open the mother-bud annotation plugin go to Plugins>napari-buds>bud annotation.
     
 4. To train a random forest classifier, in the created label layer draw examples of cells, buds and background (see tutorial gif below). 
 In the Define Label segment of the widget you define which label value (class #label_value) corresponds to cells, buds and background. 

@@ -30,97 +30,112 @@ def dilation(img, iter):
     return img
 
 #function for cleaning up segmentation errors 
-def clean_up(layer):
+def clean_up(layer,minimal_object_size):
     layer=remove_small_holes(layer,10)
     layer=erosion(layer,3)
     layer=dilation(layer,3)
-    layer=remove_small_objects(layer,min_size=100)
+    layer=remove_small_objects(layer,min_size=minimal_object_size)
 
     return layer
 
-#measure distance from cell to blob, currently not used 
-def m_dist(cellxy,blobxy):
-    xvalue=cellxy[1]-blobxy[1]
-    yvalue=cellxy[2]-blobxy[2]
-    distance=(xvalue**2+yvalue**2)**.5
-            
-    return distance
+def nearest_nonzero_label(a,y,x):
+    x,y=int(x),int(y)
+    #minimal area to look for new labels
+    minimal_area=35
+    #y values 
+    ymin=y-minimal_area
+    ymax=y+minimal_area
+    #x values
+    xmin=x-minimal_area
+    xmax=x+minimal_area
+    
+    if xmin<0:
+        xmin=0
+    if ymin<0:
+        ymin=0
 
-#find nearest nonzero value
-def nearest_nonzero(a,x,y):
+    a=a[ymin:ymax,xmin:xmax]
     idx = np.argwhere(a)
-    idx=idx[((idx - [x,y])**2).sum(1).argmin()]
-    value=a[idx[0],idx[1]]
+    
+    if len(idx)>0:
+        idx=idx[((idx - [y,x])**2).sum(1).argmin()]
+        new_label=a[idx[0],idx[1]]
+    else:
+        new_label=0
 
-    return value
+    return new_label
 
 #function that chooses the largest bud and removes the other if more then one bud with the same label value exists 
-def continuous_space(buds,original_buds):
-    buds_frame=pd.DataFrame(rt(buds,properties=['label','centroid','area']))
-    bud_label=np.empty((buds.shape[0],buds.shape[1]),dtype=int)
+def continuous_space(new_buds,old_buds):
+    buds_frame=pd.DataFrame(rt(new_buds,properties=['label','centroid','area']))
     for labelid in buds_frame.label.values:
-        array=np.where((buds==labelid),original_buds,0)
+        array=np.where((new_buds==labelid),old_buds,0)
         rarray=np.ravel(array)
-        rarray=np.delete(rarray, np.where(rarray == 0))
+        rarray=rarray[rarray!=0]
         unique_labels=np.unique(rarray)
-        if len(unique_labels)>0:
-            if len(unique_labels)>1:
-                area=dict(Counter(rarray))
-                key=max(area, key=area.get)
-            else:
-                key=unique_labels[0]
-            bud_label+=np.where((original_buds==int(key)),buds,0)
+        if len(unique_labels)>1:
+            #find the largest area in the orignal bud layer
+            area=dict(Counter(rarray))
+            #get its label
+            key=max(area, key=area.get)
+            smaller_bud_labels=unique_labels[unique_labels!=key]
+            #remove from the orignal budlayer the smaller area
+            new_buds=np.where(np.isin(old_buds,smaller_bud_labels),0,new_buds)
 
-    return bud_label
+    return new_buds
 
-#if multiple cells claim the same bud, this function assigns the bud to the cell with the nearest nuclei 
-def contested_buds(buds,original_buds,labels,markers):
+#if multiple cells claim the same bud, this function assigns the bud to the cell with the largest area
+def contested_buds(new_buds,old_buds):
     # filter for contested buds
-    table_buds=pd.DataFrame(rt(buds,properties=['label','centroid','area']))
-    original_budlabels=[original_buds[int(rows[1]),int(rows[2])] for key, rows in table_buds.iterrows()]
-    table_buds['original budlabels']=original_budlabels
-    dups=table_buds.duplicated('original budlabels')
-    table_buds['original bud contested']=dups
-    table_buds=table_buds[table_buds['original budlabels']!=0]
-    contesting=table_buds[table_buds['original bud contested']==True]
-    contested=list(contesting['original budlabels'].values)
-    original_buds_frame=pd.DataFrame(rt(original_buds,properties=['label','centroid','area']))
-    filter_contest=original_buds_frame.label.isin(contested)
-    #budsoi contains only contested buds
-    budsoi = original_buds_frame[filter_contest]
-    markers=np.where((markers>0),labels,0)
-    budsoi=budsoi.set_index('label')
-    #find nearest nuclei of contested buds and update label accordingly
-    nearest_nuclei=[nearest_nonzero(markers,rows[1][0],rows[1][1]) for rows in budsoi.iterrows()]
-    budsoi['nearest nuclei']=nearest_nuclei
-    x=np.empty((buds.shape[0],buds.shape[1]),dtype=int)
-    for og,rows in budsoi.iterrows():
-        decontested_bud=np.where((original_buds==int(og)),int(rows[3]),int(0))
-        x=x+decontested_bud 
-    corrected_buds=np.where((x>0),x,buds)
-    labeled_buds=corrected_buds
+    old_buds_id=np.unique(old_buds)
+    old_buds_id=old_buds_id[old_buds_id!=0]
+    ROIs=[np.where(old_buds==old_id,new_buds,0) for old_id in old_buds_id]
+
+    # find new label buds contained in old buds (ROIs)
+    frames=[pd.DataFrame(rt(ROI,properties=['label','centroid','area'])) for ROI in ROIs]
+    # find the largest bud label in a old bud label
+    largest_labels=[frame.sort_values(by='area',ascending=False).label.values[0] for frame in frames if len(frame)>0]
+    # find all other labels
+    all_other_labels=[frame.sort_values(by='area',ascending=False).label.values[1:] for frame in frames if len(frame)>0]
+    # replace all other labels with largest label
+    for largest_label,other_labels in zip(largest_labels,all_other_labels):
+        new_buds=np.where(np.isin(new_buds,other_labels),largest_label,new_buds)
     
-    return labeled_buds
+    return new_buds 
+
+def assign_unlabelled_buds(new_buds,old_buds,labels):
+    # find buds that have not been assigned a label
+    unlabelled_buds=np.where((old_buds>0) & (new_buds==0),old_buds,0)
+    # assign new labels based on the closest cell mask to these buds
+    buds_frame=pd.DataFrame(rt(unlabelled_buds,properties=['label','area','centroid']))
+    for index,row in buds_frame.iterrows():
+        new_label=nearest_nonzero_label(labels,row['centroid-0'],row['centroid-1'])
+        new_buds=np.where((old_buds==row['label'])&(~np.isin(new_buds,new_label)),new_label,new_buds) 
+        
+    return new_buds
 
 #segment buds (included bud decontestion and continuos space requirement functions)
 def segment_buds(label,result,markers,cell_id,bud_id,bg_id):
     labeled_buds_cont=np.zeros((result.shape[0],result.shape[1]),dtype=int)
     if bud_id!=None:
         buds=result==bud_id
-        buds=clean_up(buds)
-        labels_buds,_=nlabel(buds) 
+        buds=clean_up(buds,10)
+        labels_buds,_= nlabel(buds) 
+        # flood everywhere where label and bud agree with congruent bud and cell labels
         buds=np.where((label>0) & (buds>0),label,0)
-        #budlabels that are contested are linked to closes nuclei
-        decontested_buds=contested_buds(buds,labels_buds,label,markers)
+        #assign buds that aren't assigned to a cell to closest cell mask
+        labeled_buds_assigned=assign_unlabelled_buds(buds,labels_buds,label)
+        #budlabels that are contested are given to the largest nuclei
+        decontested_buds=contested_buds(labeled_buds_assigned,labels_buds)
         #budlabels can exist in only one continuos location
-        labeled_buds_cont=continuous_space(buds,labels_buds)
+        labeled_buds_cont=continuous_space(decontested_buds,labels_buds)
 
     return labeled_buds_cont
 
 #cell mask watershed segment function
 def watershed_seg(result, seeds,cell_id,bud_id,bg_id):
     cells=result==cell_id
-    cells=clean_up(cells)
+    cells=clean_up(cells,100)
     markers=seeds
     non_background=np.where((result > 0) & (result!=bg_id),result,0)
     non_background=non_background>0

@@ -20,6 +20,7 @@ from skimage import io,segmentation,data, feature, future
 from skimage.feature import peak_local_max
 from skimage.filters import threshold_otsu
 from superqt import QLabeledRangeSlider,QRangeSlider
+from superqt import QCollapsible
 
 
 ##################################################################################################################################################
@@ -75,7 +76,10 @@ class Define_class_labels(QWidget):
         # set default class labels
         self.class_labels =  ['cells','buds','background']
         slabels=self.class_labels
-        widget_class_names = count_class_labels(self.viewer.layers['Labels'].data)
+        try:
+            widget_class_names = count_class_labels(self.viewer.layers['Labels'].data)
+        except:
+            widget_class_names = ['cells','buds','background']
 
         #add numbered class labels if exceeds defeault
         if len(widget_class_names)>len(slabels) & len(widget_class_names)!=0:
@@ -132,24 +136,11 @@ class Define_class_labels(QWidget):
 
 ####################################################################################################################################################
 
-@magicclass(layout='vertical')
-class RF_settings():
-    """widget to apply and train classifiers"""
-    def __init__(self):
-        self.features_func=partial(feature.multiscale_basic_features,intensity=True, edges=True, texture=True,
-                        sigma_min=1, sigma_max=20)
-        self.rf_params=RandomForestClassifier(n_estimators=100, n_jobs=-1,
-                     max_depth=10, max_samples=0.05)
 
-    #random forest classification parameter widget
-    @set_design(text="Set random forest parameters")
-    def set_random_forest_params(self,intensity=True, edges=True, texture=True,
-                        sigma_min=1, sigma_max=20, n_estimators=100,n_jobs=-1,max_depth=10,max_samples=0.05):
-        self.features_func=partial(feature.multiscale_basic_features,
-                        intensity=intensity, edges=edges, texture=texture,
-                        sigma_min=sigma_min, sigma_max=sigma_max)
-        self.rf_params=RandomForestClassifier(n_estimators=n_estimators, n_jobs=n_jobs,
-                     max_depth=max_depth, max_samples=max_samples)
+@magic_factory(call_button="save settings")
+def RF_settings(intensity=True, edges=True, texture=True,sigma_min=1, sigma_max=20, n_estimators=100,n_jobs=-1,max_depth=10,max_samples=0.05):
+    print('updated settings')
+    
 
 class Train_Classifier(QWidget):
     def __init__(self, parent):
@@ -159,13 +150,21 @@ class Train_Classifier(QWidget):
         self.setLayout(QVBoxLayout())
 
         self.settings = RF_settings()
-        self.features_func=self.settings.features_func 
-        self.rf_params=self.settings.rf_params
+        self.features_func=partial(feature.multiscale_basic_features,
+                            intensity=self.settings.intensity.value, edges=self.settings.edges.value, texture=self.settings.texture.value,
+                            sigma_min=self.settings.sigma_min.value, sigma_max=self.settings.sigma_max.value)
+        self.rf_params=RandomForestClassifier(n_estimators=self.settings.n_estimators.value, n_jobs=self.settings.n_jobs.value,
+                        max_depth=self.settings.max_depth.value, max_samples=self.settings.max_samples.value)
 
-        @self.settings.changed.connect
-        def update_feature_settings():
-            self.features_func=self.settings.features_func
-            self.rf_params=self.settings.rf_params
+        def save_settings():
+            self.features_func=partial(feature.multiscale_basic_features,
+                            intensity=self.settings.intensity.value, edges=self.settings.edges.value, texture=self.settings.texture.value,
+                            sigma_min=self.settings.sigma_min.value, sigma_max=self.settings.sigma_max.value)
+            self.rf_params=RandomForestClassifier(n_estimators=self.settings.n_estimators.value, n_jobs=self.settings.n_jobs.value,
+                        max_depth=self.settings.max_depth.value, max_samples=self.settings.max_samples.value)
+            print('save settings')
+            print(self.features_func)
+
 
         #train classifier by extracting from checked feature layers and fitting + predicting random forest parameters
         self.train_button=PushButton(label='Train classifier')
@@ -219,7 +218,7 @@ class Train_Classifier(QWidget):
                 file=self.load_edit.value
                 self.clf=joblib.load(str(file))
             except:
-                self.viewer='image not loaded'
+                self.viewer.status='classifier not loaded'
 
         #load classifier
         self.save_edit=FileEdit(label="Save classifier", mode='w', value='file')
@@ -234,17 +233,22 @@ class Train_Classifier(QWidget):
                 file=self.load_edit.value
                 joblib.dump(self.clf,str(file))
             except:
-                self.viewer.status='image not saved'
+                self.viewer.status='classifier not saved'
 
         #connect buttons and functions
         self.train_button.changed.connect(train_classifier)
         self.classify_button.changed.connect(classify)
         self.load_button.changed.connect(load_classifier)#add label horizontal
         self.save_button.changed.connect(save_classifier)#add label horizontal
+        self.settings.call_button.clicked.connect(save_settings)
 
+        #create container with classifier settings
+        self._collapse1 = QCollapsible('RF settings', self)
+        self._collapse1.addWidget(self.settings.native)
+        self.cont_Train_Classifier=Container(widgets=[self.train_button,self.classify_button,self.load_container,self.save_container],labels=False)
 
-        self.cont_Train_Classifier=Container(widgets=[self.settings,self.train_button,self.classify_button,self.load_container,self.save_container],labels=False)
-
+        #add container to widget layout
+        self.layout().addWidget(self._collapse1)
         self.layout().addWidget(self.cont_Train_Classifier.native)
 
 ###################################################################################################################################################
@@ -290,7 +294,7 @@ class Threshold(QWidget):
             scaled_img = self.to_threshold_img*(100/self.to_threshold_img.max())
             threshold = self.threshold_slider.value
             seeds = scaled_img > threshold
-            seeds = clean_up(seeds)
+            seeds = clean_up(seeds,10)
             markers,_= nlabel(seeds)
             try:
                 self.viewer.layers.remove('seeds')
@@ -421,7 +425,7 @@ class Segment(QWidget):
 
         self.layout().addWidget(self.segment_button.native)
 
-# ##################################################################################################################################################
+####################################################################################################################################################
 
 class Draw(QWidget):
     """widget to draw mother bud connections between bud and cell mask layer"""
@@ -450,4 +454,4 @@ class Draw(QWidget):
         self.draw_button.changed.connect(draw_mother_bud)
         self.layout().addWidget(self.draw_button.native)
 
-# ##################################################################################################################################################
+####################################################################################################################################################
