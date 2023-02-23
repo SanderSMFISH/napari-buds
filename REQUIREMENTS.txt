@@ -11,3 +11,4 @@
     joblib
     imageio_ffmpeg
     stackview
+    jupyterlab

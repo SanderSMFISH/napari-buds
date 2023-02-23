@@ -79,7 +79,7 @@ class Define_class_labels(QWidget):
         try:
             widget_class_names = count_class_labels(self.viewer.layers['Labels'].data)
         except:
-            widget_class_names = ['cells','buds','background']
+            widget_class_names = ['class_1','class_2','class_3']
 
         #add numbered class labels if exceeds defeault
         if len(widget_class_names)>len(slabels) & len(widget_class_names)!=0:
@@ -135,8 +135,6 @@ class Define_class_labels(QWidget):
         self.layout().addWidget(Refresh_labels.native)
 
 ####################################################################################################################################################
-
-
 @magic_factory(call_button="save settings")
 def RF_settings(intensity=True, edges=True, texture=True,sigma_min=1, sigma_max=20, n_estimators=100,n_jobs=-1,max_depth=10,max_samples=0.05):
     print('updated settings')
@@ -200,7 +198,7 @@ class Train_Classifier(QWidget):
                     fs.append(self.features_func(array))
             features = np.concatenate(fs, axis=-1)
             clf = self.clf
-            training_labels = self.viewer.layers['Labels'].data.astype(np.uint32)
+            #training_labels = self.viewer.layers['Labels'].data.astype(np.uint32)
             result = future.predict_segmenter(features, clf)
             try:
                 self.viewer.remove('result')

@@ -1,4 +1,5 @@
 from qtpy.QtWidgets import QWidget, QMainWindow, QApplication, QDockWidget,QScrollArea, QVBoxLayout,QTabWidget,QPushButton
+from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QWidget, QAction, QTabWidget,QVBoxLayout
 from qtpy.QtCore import QObject, QEvent, Qt
 from magicgui.widgets import LineEdit, SpinBox, Container, PushButton, create_widget, Label
 from superqt import QCollapsible
