@@ -377,7 +377,6 @@ class Maxima(QWidget):
         #update local peaks when changes to slider are made        
         self.local_peaks_slider.changed.connect(create_seeds)
         self.rel_threshold_slider.changed.connect(create_seeds)
-        self.input.changed.connect(create_seeds)
         self.update_distances.changed.connect(create_seeds)
         
         #add widgets to Qwidget     
