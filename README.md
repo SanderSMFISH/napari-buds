@@ -52,8 +52,8 @@ An example (jupyter) notebook (Open Test Images Napari.ipynb) for loading test d
 Example dataset can be downloaded from https://zenodo.org/record/7004556#.YwM1_HZBztU. 
     
 2. If multichannel images are unaligned the  translate widget under Plugins>napari-buds>Translate can be used. 
-Select which layer should be translated to align to the layers in widget menu. Then use the aswd keys to translate (move) the selected layer. 
-To register changes and update coordinates of the translated image in napari press t. 
+Select which layer should be translated. Then use the aswd keys to translate (move in xy) the selected layer. 
+To register changes and update coordinates of the translated image press t. 
     
 ### Random forest classification
 3. To open the mother-bud annotation plugin go to Plugins>napari-buds>bud annotation.
@@ -62,29 +62,28 @@ To register changes and update coordinates of the translated image in napari pre
 In the Define Label segment of the widget you define which label value (class #label_value) corresponds to cells, buds and background. 
 Currently, cells and backgrounds and buds **have to be defined in the Define Label segment**  if you want to be able to segment the classification as well.
 In the segment **Layers to extract Features from** we can select which layers will be used in training the random forest classifier. 
-Next press **Train classifier**. After training is completed a result layer is added to layer list. 
-Inspect the results carefully to asses classifier performance. The trained classifier can be saved using the **save classifier** button.
-Previously trained classifier can be loaded by pressing **Load classifier**. Loaded classifier can applied to new images by pressing **Classify**, resulting again in a results layer.
-It is possible to change the random forest parameters with **the Set random forest parameters** button and changing the values in the pop up menu.
-Press **Run** to register changed settings. For an example of the parameters used see: 
+Next press **Train classifier**. After training is completed a result layer is added to the layer list. 
+Inspect the results carefully to assess classifier performance. The trained classifier can be saved using the **save classifier** button.
+Previously trained classifiers can be loaded by pressing **Load classifier**. The loaded classifier can be applied to new images by pressing **Classify**.
+It is possible to change the random forest parameters with **the Set random forest parameters** button and changing the values in the pop-up menu.
+Press **Run** to register the changed settings. For an example of the parameters used see: 
 https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html and 
 https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_trainable_segmentation.html. 
     
 5. Next, we want to perfom watershed segmentation using the result layer. However, for watershed segmentation seeds (also called markers) are required
-(for an explanation of watershed segmenation see: https://en.wikipedia.org/wiki/Watershed_(image_processing)). 
-To define the seeds we can either simply threshold on one of the supplied image layers or we can use distance tranform (https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_watershed.html#sphx-glr-auto   examples-segmentation-plot-watershed-py).The resulting seeds layer can be adjusted manually by editing in napari.
-A good seeds layers correspond to each cell having a single seed (buds are not single cells). To perform watershed segmentation press the **Segment** button.
+(for an explanation of watershed segmentation see: https://en.wikipedia.org/wiki/Watershed_(image_processing)). 
+To define the seeds we can either simply threshold on one of the supplied image layers or we can use distance transform (https://scikit-image.org/docs/stable/auto_examples/segmentation/plot_watershed.html#sphx-glr-auto   examples-segmentation-plot-watershed-py). The resulting seeds layer can be adjusted manually by editing in Napari. A good seeds layers correspond to each cell having a single seed (buds are not single cells). To perform watershed segmentation press the **Segment** button.
     
 6. Carefully inspect the resulting cell mask and bud layer. Correct the mistakes in both layers. 
-Bud label values should correspond to the label value of the cell mask of mother cell. To verify mother bud relations were drawn correctly
+Bud label values should correspond to the label value of the cell mask of the mother cell. To verify mother-bud relations were drawn correctly
 press **Draw Mother-Bud relations**. If Mother-Bud relations are correct, you can save both label layers. Mother and buds simply share the same label number.
 Thus, either the mother or bud layer can be manually corrected for mistakes. Corrections can be checked by clicking **Draw Mother-Bud relations** again. 
-mother and buds layer can be saved manually in napari. When using Jupyter notebook mother and bud layers can be saved as shown in Open Test Images Napari.ipynb.
+When using Jupyter notebook mother and bud layers can be saved as shown in "Open Test Images Napari.ipynb".
 
-7. An example notebook for dataextraction of the created cell and bud masks can be found in the example notebooks folder (Extract_Mother_Buds_relations_from_Masks_and_intergrate_FQ_spot_data.ipynb).This notebooks relates RNA spots (smFISH data found on zenodo) to the mother or bud compartment. 
+7. An example notebook for data extraction of the created cell and bud masks can be found in the example notebooks folder (Extract_Mother_Buds_relations_from_Masks_and_intergrate_FQ_spot_data.ipynb).This notebooks relates RNA spots (smFISH data found on zenodo) to the mother or bud compartment. 
 
 
-See video for clarification:
+See tutorial gif:
 
 ![Watch the video](https://github.com/SanderSMFISH/napari-buds/blob/main/videos/Napari_bud_gif.gif)
 
@@ -105,8 +104,8 @@ If you encounter any problems, please [file an issue] along with a detailed desc
 
 ### Known Issues
 
-If window geometry of the window is unable to be set, this might lead to issues in the display of the widget. For example, part of the widget might fall of the screen.
-In these cases, it might help to adjust in your display setting the display scaling to a lower setting. 
+If window geometry of the window is unable to be set, this might lead to issues in the display of the widget. For example, part of the widget might fall outside of the screen.
+In these cases, it might help to adjust your display setting scaling to a lower setting. 
 
 [napari]: https://github.com/napari/napari
 [Cookiecutter]: https://github.com/audreyr/cookiecutter
